@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+
+    <head>
+        <title>MultiLayer Perceptron Dashboard</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">MultiLayer Perceptrons in Training</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div th:replace="fragments :: globalNotification"></div>
+                </div>              
+            </div>
+            <div class="row">                
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <p th:if="${#lists.isEmpty(mlpIds)}">There are no perceptrons training right now.</p>
+                        <p th:each="mlpId : ${mlpIds}"> 
+                            <span th:text="#{'mlp'} + ' - '">Perceptron 1</span><a th:href="@{'/mlp/view/'+ ${mlpId}}" th:text="${mlpId}"></a>
+                        </p>
+                    </div>						
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <hr/>
+                </div>
+            </div>            
+            <div class="row">
+                <div class="col-lg-4">
+                    <a th:href="@{'/mlp/create'}" class="btn btn-primary form-control"><i class="fa fa-plus-square pull-left"></i>Create new MultiLayer Perceptron</a>
+                </div>
+            </div>            
+        </div>
+    </body>
+</html>

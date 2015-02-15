@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+
+    <head>         
+        <style type="text/css">
+            #container {
+                max-width: 1000px;
+                height: 500px;
+                margin: auto;
+            }
+        </style>
+        <script src="../static/js/sigma/sigma.min.js" th:src="@{'/js/sigma/sigma.min.js'}"></script>
+        <script src="../static/js/sigma/plugins/sigma.parsers.json.min.js" th:src="@{'/js/sigma/plugins/sigma.parsers.json.min.js'}"></script>  
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            // Add a method to the graph model that returns an
+            // object with every neighbors of a node inside:
+            sigma.classes.graph.addMethod('neighbors', function (nodeId) {
+                var k,
+                        neighbors = {},
+                        index = this.allNeighborsIndex[nodeId] || {};
+
+                for (k in index)
+                    neighbors[k] = this.nodesIndex[k];
+
+                return neighbors;
+            });
+            var mlpId = /*[[${mlpId}]]*/'1';
+            sigma.parsers.json('/mlp/topology/' + mlpId, {
+                container: 'container',
+                settings: {
+                    defaultNodeColor: '#ec5148'
+                }},
+            function (s) {
+                // We first need to save the original colors of our
+                // nodes and edges, like this:
+                s.graph.nodes().forEach(function (n) {
+                    n.originalColor = n.color;
+                });
+                s.graph.edges().forEach(function (e) {
+                    e.originalColor = e.color;
+                });
+
+                // When a node is clicked, we check for each node
+                // if it is a neighbor of the clicked one. If not,
+                // we set its color as grey, and else, it takes its
+                // original color.
+                // We do the same for the edges, and we only keep
+                // edges that have both extremities colored.
+                s.bind('clickNode', function (e) {
+                    var nodeId = e.data.node.id,
+                            toKeep = s.graph.neighbors(nodeId);
+                    toKeep[nodeId] = e.data.node;
+
+                    s.graph.nodes().forEach(function (n) {
+                        if (toKeep[n.id])
+                            n.color = n.originalColor;
+                        else
+                            n.color = '#eee';
+                    });
+
+                    s.graph.edges().forEach(function (e) {
+                        if (toKeep[e.source] && toKeep[e.target])
+                            e.color = e.originalColor;
+                        else
+                            e.color = '#eee';
+                    });
+
+                    // Since the data has been modified, we need to
+                    // call the refresh method to make the colors
+                    // update effective.
+                    s.refresh();
+                });
+
+                // When the stage is clicked, we just color each
+                // node and edge with its original color.
+                s.bind('clickStage', function (e) {
+                    s.graph.nodes().forEach(function (n) {
+                        n.color = n.originalColor;
+                    });
+
+                    s.graph.edges().forEach(function (e) {
+                        e.color = e.originalColor;
+                    });
+
+                    // Same as in the previous event:
+                    s.refresh();
+                });
+            }
+            );
+
+            /*]]>*/
+        </script>
+
+        <title>MultiLayer Perceptron</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">MultiLayer Perceptron</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div th:replace="fragments :: globalNotification"></div>
+                </div>              
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <p th:text="${'Current iteration: ' + runner.perceptron.getLearningRule().getCurrentIteration()}"></p>
+                        <p th:text="${'Input size: ' + runner.perceptron.getLearningRule().getTrainingSet().getInputSize()}"></p>
+                        <p th:text="${'Hidden layer size: ' + runner.form.neuronCount}" ></p>
+                        <p th:text="${'Output size: ' + runner.perceptron.getLearningRule().getTrainingSet().getOutputSize()}"></p>
+                        <p th:text="${'Learning status: ' + runner.calculateLearningStatus()}"></p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <p th:if="${#lists.isEmpty(runner.totalNetworkErrors)}">There are no network errors.</p>
+                        <p th:each="error : ${runner.totalNetworkErrors}" th:text="${'Error - ' + error}">Perceptron 1</p>
+                    </div>						
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <hr/>
+                </div>
+            </div>            
+            <div class="row">
+                <div class="col-lg-4">
+                    <a th:href="@{'/mlp/create'}" class="btn btn-primary form-control"><i class="fa fa-plus-square pull-left"></i>Create new MultiLayer Perceptron</a>
+                </div>
+            </div>  
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="container"></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

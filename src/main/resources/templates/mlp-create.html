@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+
+    <head>
+        <title>MultiLayer Perceptron Parameters Form</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">MultiLayer Perceptron Parameters Form</h1>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div th:replace="fragments :: globalNotification"></div>
+                </div>              
+            </div>
+
+            <div class="row">
+                <div class="col-lg-9">
+                    <form th:object="${mlpForm}" th:action="@{/mlp/train}" method="post" role="form">
+                        <div class="show-grid"></div>
+                        <div th:replace="fragments :: errors"></div>
+                        <div th:replace="fragments :: globalNotification"></div>
+                        <div class="form-group" th:classappend="${#fields.hasErrors('neuronCount')} ? 'has-error'">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <label for="neuronCount" class="control-label">Neuron Count:</label>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="text" class="form-control" th:field="*{neuronCount}" />
+                                </div>
+                                <div class="col-lg-6">
+                                    <p th:if="${#fields.hasErrors('neuronCount')}" th:errors="*{neuronCount}" class="help-block"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" th:classappend="${#fields.hasErrors('momentum')} ? 'has-error'">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <label for="momentum" class="control-label">Momentum:</label>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="text" class="form-control" th:field="*{momentum}" />
+                                </div>
+                                <div class="col-lg-6">
+                                    <p th:if="${#fields.hasErrors('momentum')}" th:errors="*{momentum}" class="help-block"></p>
+                                </div>
+                            </div>
+                        </div>	
+
+                        <div class="form-group" th:classappend="${#fields.hasErrors('learningRate')} ? 'has-error'">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <label for="learningRate" class="control-label">Learning Rate:</label>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="text" class="form-control" th:field="*{learningRate}" />
+                                </div>
+                                <div class="col-lg-6">
+                                    <p th:if="${#fields.hasErrors('learningRate')}" th:errors="*{learningRate}" class="help-block"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" th:classappend="${#fields.hasErrors('dataSetName')} ? 'has-error'">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <label for="dataSetName" class="control-label">Data Set:</label>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="text" class="form-control" th:field="*{dataSetName}" />
+                                </div>
+                                <div class="col-lg-6">
+                                    <p th:if="${#fields.hasErrors('dataSetName')}" th:errors="*{dataSetName}" class="help-block"></p>
+                                </div>
+                            </div>
+                        </div>                        
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-2"></div> 
+                                <div class="col-lg-4">
+                                    <input class="btn btn-primary" type="submit" value="Train" />
+                                </div> 
+                            </div> 
+                        </div>								
+                    </form>
+
+                </div>
+            </div>            
+
+        </div>
+    </body>
+</html>
