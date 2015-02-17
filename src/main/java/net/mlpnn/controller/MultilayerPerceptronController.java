@@ -1,13 +1,12 @@
 package net.mlpnn.controller;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import javax.validation.Valid;
+import net.mlpnn.dto.NetworkStatusDTO;
 import net.mlpnn.dto.SigmaGraphDTO;
 import net.mlpnn.enums.DataSetInfo;
 import net.mlpnn.form.MultilayerPercetpronParametersForm;
+import net.mlpnn.service.GraphService;
 import net.mlpnn.service.MultiLayerPerceptronRunner;
 import net.mlpnn.service.MultiLayerPerceptronService;
 import org.neuroph.nnet.MultiLayerPerceptron;
@@ -33,6 +32,9 @@ public class MultilayerPerceptronController {
     @Autowired
     MultiLayerPerceptronService multiLayerPerceptronService;
 
+    @Autowired
+    GraphService graphService;
+
     @RequestMapping(value = "/train", method = RequestMethod.POST)
     public String train(Model model, @Valid @ModelAttribute(value = "mlpForm") MultilayerPercetpronParametersForm form, BindingResult result) {
         if (!result.hasErrors()) {
@@ -45,15 +47,9 @@ public class MultilayerPerceptronController {
     }
 
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
-    public String dashboard(Model model) {
-        List<Long> mlpIds = null;
-        if (multiLayerPerceptronService.getMultiLayerPerceptronRunners() != null && multiLayerPerceptronService.getMultiLayerPerceptronRunners().size() > 0) {
-            Set<Long> ids = multiLayerPerceptronService.getMultiLayerPerceptronRunners().keySet();
-            Long[] idss = ids.toArray(new Long[ids.size()]);
-            mlpIds = Arrays.asList(idss);
-            Collections.sort(mlpIds);
-        }
-        model.addAttribute("mlpIds", mlpIds);
+    public String dashboard(Model model) throws InterruptedException {
+        List<NetworkStatusDTO> statuses = multiLayerPerceptronService.getPerceptronStatuses();
+        model.addAttribute("statuses", statuses);
         return "mlp-dashboard";
     }
 
@@ -94,4 +90,28 @@ public class MultilayerPerceptronController {
         return runner.getNetworkTopology();
     }
 
+    @RequestMapping(value = "/graph/{mlpId}/{graphType}")
+    @ResponseBody
+    public double[][] graph(@PathVariable Long mlpId, @PathVariable String graphType) {
+        MultiLayerPerceptronRunner runner = multiLayerPerceptronService.getMultiLayerPerceptronRunners().get(mlpId);
+        return graphService.getFlotChartDoubleArray(runner);
+    }
+
+    @RequestMapping(value = "/stop/{mlpId}")
+    public String stop(@PathVariable Long mlpId) {
+        multiLayerPerceptronService.stopLearning(mlpId);
+        return "redirect:/mlp/view/" + mlpId;
+    }
+
+    @RequestMapping(value = "/pause/{mlpId}")
+    public String pause(@PathVariable Long mlpId) {
+        multiLayerPerceptronService.pauseLearning(mlpId);
+        return "redirect:/mlp/view/" + mlpId;
+    }
+
+    @RequestMapping(value = "/resume/{mlpId}")
+    public String resume(@PathVariable Long mlpId) {
+        multiLayerPerceptronService.resumeLearning(mlpId);
+        return "redirect:/mlp/view/" + mlpId;
+    }
 }

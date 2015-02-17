@@ -1,10 +1,17 @@
 package net.mlpnn.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 import net.mlpnn.ApplicationConfiguration;
-import net.mlpnn.dto.NetworkStatus;
+import net.mlpnn.dto.NetworkStatusDTO;
 import net.mlpnn.form.MultilayerPercetpronParametersForm;
 import org.neuroph.nnet.MultiLayerPerceptron;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +21,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MultiLayerPerceptronService {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(MultiLayerPerceptronService.class);
 
     @Autowired
     private ApplicationConfiguration config;
@@ -68,5 +77,39 @@ public class MultiLayerPerceptronService {
         }
         runner.getPerceptron().getLearningRule().stopLearning();
         return runner;
+    }
+
+    public MultiLayerPerceptronRunner resumeLearning(long multiLayerPerceptronRunnerId) {
+        MultiLayerPerceptronRunner runner = getMultiLayerPerceptronRunners().get(multiLayerPerceptronRunnerId);
+        if (runner == null) {
+            return null;
+        }
+        runner.getPerceptron().getLearningRule().resume();
+        return runner;
+    }
+
+    public List<NetworkStatusDTO> getPerceptronStatuses() throws InterruptedException {
+        List<NetworkStatusDTO> statuses = new ArrayList<>();
+        if (this.getMultiLayerPerceptronRunners() != null && this.getMultiLayerPerceptronRunners().size() > 0) {
+            HashMap<Long, MultiLayerPerceptronRunner> runners = this.getMultiLayerPerceptronRunners();
+            Set<Long> ids = runners.keySet();
+            Long[] idss = ids.toArray(new Long[ids.size()]);
+            List<Long> mlpIds = Arrays.asList(idss);
+            Collections.sort(mlpIds);
+            for (Long mlpId : mlpIds) {
+                MultiLayerPerceptronRunner runner = runners.get(mlpId);
+                NetworkStatusDTO dto = new NetworkStatusDTO();
+                if (runner.getPerceptron() == null) {
+                    Thread.sleep(500);
+                    LOGGER.info("We're waiting ....");
+                }
+                dto.setCurrentIteration(runner.getPerceptron().getLearningRule().getCurrentIteration());
+                dto.setLearningStatus(runner.calculateLearningStatus());
+                dto.setNetworkName(runner.getForm().getNetworkName());
+                dto.setRunnerId(mlpId);
+                statuses.add(dto);
+            }
+        }
+        return statuses;
     }
 }

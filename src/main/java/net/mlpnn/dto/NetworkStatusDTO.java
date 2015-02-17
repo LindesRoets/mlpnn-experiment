@@ -7,11 +7,13 @@ import net.mlpnn.enums.LearningStatus;
  *
  * @author Lindes Roets
  */
-public class NetworkStatus {
+public class NetworkStatusDTO {
 
     private LearningStatus learningStatus;
     private int currentIteration;
     private ArrayList<Double> totalNetworkErrors;
+    private Long runnerId;
+    private String networkName;
 
     public int getCurrentIteration() {
         return currentIteration;
@@ -35,6 +37,22 @@ public class NetworkStatus {
 
     public void setTotalNetworkErrors(ArrayList<Double> totalNetworkErrors) {
         this.totalNetworkErrors = totalNetworkErrors;
+    }
+
+    public Long getRunnerId() {
+        return runnerId;
+    }
+
+    public void setRunnerId(Long runnerId) {
+        this.runnerId = runnerId;
+    }
+
+    public String getNetworkName() {
+        return networkName;
+    }
+
+    public void setNetworkName(String networkName) {
+        this.networkName = networkName;
     }
 
 }

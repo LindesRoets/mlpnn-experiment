@@ -8,6 +8,9 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @author Lindes Roets
  */
 public class MultilayerPercetpronParametersForm {
+    
+    @NotEmpty
+    private String networkName;
 
     @NotNull
     private Integer neuronCount;
@@ -51,6 +54,14 @@ public class MultilayerPercetpronParametersForm {
 
     public void setDataSetName(String dataSetName) {
         this.dataSetName = dataSetName;
+    }
+
+    public String getNetworkName() {
+        return networkName;
+    }
+
+    public void setNetworkName(String networkName) {
+        this.networkName = networkName;
     }
 
 }

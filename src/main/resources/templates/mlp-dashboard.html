@@ -10,7 +10,7 @@
         <div layout:fragment="content">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">MultiLayer Perceptrons in Training</h1>
+                    <h1 class="page-header">MultiLayer Perceptrons Dashboard</h1>
                 </div>
             </div>
             <div class="row">
@@ -19,18 +19,26 @@
                 </div>              
             </div>
             <div class="row">                
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <p th:if="${#lists.isEmpty(mlpIds)}">There are no perceptrons training right now.</p>
-                        <p th:each="mlpId : ${mlpIds}"> 
-                            <span th:text="#{'mlp'} + ' - '">Perceptron 1</span><a th:href="@{'/mlp/view/'+ ${mlpId}}" th:text="${mlpId}"></a>
-                        </p>
-                    </div>						
-                </div>
-            </div>
-            <div class="row">
                 <div class="col-lg-12">
-                    <hr/>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Perceptrons</div>
+                        <div class="panel-body">
+                            <p th:if="${#lists.isEmpty(statuses)}">There are no perceptrons training right now.</p>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr><td>Test name</td><td>Learning Status</td><td>Last Iteration</td><td></td></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="info" th:each="status : ${statuses}">
+                                            <td th:text="${status.networkName}"></td><td th:text="${status.learningStatus}"></td><td th:text="${status.currentIteration}"></td><td><a th:href="@{'/mlp/view/'+ ${status.runnerId}}">View</a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>            
             <div class="row">

@@ -67,5 +67,13 @@
         <script src="../static/js/main.js" th:src="@{'/js/main.js'}"></script>
         <script src="../static/js/plugins/metisMenu/metisMenu.min.js" th:src="@{'/js/plugins/metisMenu/metisMenu.js'}"></script>
         <script src="../static/js/sb-admin-2.js" th:src="@{'/js/sb-admin-2.js'}"></script>
+        <script src="../static/js/sigma/sigma.min.js" th:src="@{'/js/sigma/sigma.min.js'}"></script>
+        <script src="../static/js/sigma/plugins/sigma.parsers.json.min.js" th:src="@{'/js/sigma/plugins/sigma.parsers.json.min.js'}"></script> 
+        <script src="../static/js/plugins/flot/jquery.flot.js" th:src="@{'/js/plugins/flot/jquery.flot.js'}"></script>
+        <script src="../static/js/plugins/flot/jquery.flot.resize.js" th:src="@{'/js/plugins/flot/jquery.flot.resize.js'}"></script>
+        
+        <!-- This line must stay last -->
+        <section layout:fragment="custom-js" th:remove="tag"></section>
+
     </body>
 </html>

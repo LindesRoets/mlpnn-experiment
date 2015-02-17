@@ -1,8 +1,8 @@
 package net.mlpnn.controller;
 
 import java.util.ArrayList;
-import net.mlpnn.dto.Edge;
-import net.mlpnn.dto.Node;
+import net.mlpnn.rep.Edge;
+import net.mlpnn.rep.Node;
 import net.mlpnn.dto.SigmaGraphDTO;
 
 import org.springframework.stereotype.Controller;
@@ -30,6 +30,34 @@ public class ExampleController {
         return "sigma-example";
     }
 
+    @RequestMapping("/flot/example")
+    public String flot(Model model) {
+        return "flot-example";
+    }
+
+    @RequestMapping(value = "/flot/example/data", produces = "application/json")
+    @ResponseBody
+    public double[][] flotExample() {
+        double[][] coordinates = new double[3][2];
+
+        double[] c1 = new double[2];
+        c1[0] = 1d;
+        c1[1] = 0.0123;
+        coordinates[0] = c1;
+
+        double[] c2 = new double[2];
+        c2[0] = 2d;
+        c2[1] = 0.0113;
+        coordinates[1] = c2;
+
+        double[] c3 = new double[2];
+        c3[0] = 3d;
+        c3[1] = 0.00923;
+        coordinates[2] = c3;
+        return coordinates;
+
+    }
+
     @RequestMapping(value = "/sigma/example/{mlpId}", produces = "application/json")
     @ResponseBody
     public SigmaGraphDTO topology(@PathVariable Long mlpId) {
@@ -53,32 +81,32 @@ public class ExampleController {
         node3.setX(4);
         node3.setY(0);
         node3.setSize(3);
-        
+
         Node node4 = new Node();
         node4.setId("n3");
         node4.setLabel("class b");
         node4.setX(1);
         node4.setY(1);
         node4.setSize(3);
-        
+
         Node node5 = new Node();
         node5.setId("n4");
         node5.setLabel("class a");
         node5.setX(3);
         node5.setY(1);
-        node5.setSize(3);        
+        node5.setSize(3);
 
         Edge edge1 = new Edge("e0", "n0", "n3");
 
         Edge edge2 = new Edge("e1", "n1", "n3");
 
         Edge edge3 = new Edge("e2", "n2", "n3");
-        
+
         Edge edge4 = new Edge("e3", "n0", "n4");
 
         Edge edge5 = new Edge("e4", "n1", "n4");
 
-        Edge edge6 = new Edge("e5", "n2", "n4");        
+        Edge edge6 = new Edge("e5", "n2", "n4");
 
         ArrayList<Node> nodes = new ArrayList<>();
         nodes.add(node1);
