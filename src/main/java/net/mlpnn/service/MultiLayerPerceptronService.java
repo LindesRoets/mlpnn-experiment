@@ -99,14 +99,23 @@ public class MultiLayerPerceptronService {
             for (Long mlpId : mlpIds) {
                 MultiLayerPerceptronRunner runner = runners.get(mlpId);
                 NetworkStatusDTO dto = new NetworkStatusDTO();
-                if (runner.getPerceptron() == null) {
+                int count = 0;
+                while (runner.getPerceptron() == null) {
+                    // each of these runners is handled in a different thread. 
+                    // Therefore this Thread has to wait for a new training thread to intantiate its perceptron
                     Thread.sleep(500);
                     LOGGER.info("We're waiting ....");
+                    count++;
+                    if (count > 5) {
+                        break;
+                    }
                 }
+
                 dto.setCurrentIteration(runner.getPerceptron().getLearningRule().getCurrentIteration());
                 dto.setLearningStatus(runner.calculateLearningStatus());
                 dto.setNetworkName(runner.getForm().getNetworkName());
                 dto.setRunnerId(mlpId);
+                dto.setHiddenLayerNeuronCount(runner.getForm().getNeuronCount());
                 statuses.add(dto);
             }
         }

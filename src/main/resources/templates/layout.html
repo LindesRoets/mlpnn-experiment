@@ -7,6 +7,8 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{'/css/bootstrap.min.css'}"/>
+        <link rel="stylesheet" href="../static/css/plugins/dataTables.bootstrap.css" th:href="@{'/css/plugins/dataTables.bootstrap.css'}"/>
+        <link rel="stylesheet" href="../static/css/plugins/dataTables.responsive.css" th:href="@{'/css/plugins/dataTables.responsive.css'}"/>
         <link rel="stylesheet" href="../static/css/plugins/metisMenu/metisMenu.min.css" th:href="@{'/css/plugins/metisMenu/metisMenu.min.css'}" />
         <link rel="stylesheet" href="../static/css/sb-admin-2.css" th:href="@{'/css/sb-admin-2.css'}" />
         <link rel="stylesheet" href="../static/font-awesome-4.1.0/css/font-awesome.min.css" th:href="@{'/font-awesome-4.1.0/css/font-awesome.min.css'}" type="text/css" />
@@ -71,7 +73,10 @@
         <script src="../static/js/sigma/plugins/sigma.parsers.json.min.js" th:src="@{'/js/sigma/plugins/sigma.parsers.json.min.js'}"></script> 
         <script src="../static/js/plugins/flot/jquery.flot.js" th:src="@{'/js/plugins/flot/jquery.flot.js'}"></script>
         <script src="../static/js/plugins/flot/jquery.flot.resize.js" th:src="@{'/js/plugins/flot/jquery.flot.resize.js'}"></script>
-        
+        <!-- DataTables JavaScript -->
+        <script src="../static/js/plugins/dataTables/jquery.dataTables.js" th:src="@{'/js/plugins/dataTables/jquery.dataTables.js'}"></script>
+        <script src="../static/js/plugins/dataTables/dataTables.bootstrap.js" th:src="@{'/js/plugins/dataTables/dataTables.bootstrap.js'}"></script>
+
         <!-- This line must stay last -->
         <section layout:fragment="custom-js" th:remove="tag"></section>
 

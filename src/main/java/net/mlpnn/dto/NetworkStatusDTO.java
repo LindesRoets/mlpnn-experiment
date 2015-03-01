@@ -14,6 +14,7 @@ public class NetworkStatusDTO {
     private ArrayList<Double> totalNetworkErrors;
     private Long runnerId;
     private String networkName;
+    private int hiddenLayerNeuronCount;
 
     public int getCurrentIteration() {
         return currentIteration;
@@ -53,6 +54,14 @@ public class NetworkStatusDTO {
 
     public void setNetworkName(String networkName) {
         this.networkName = networkName;
+    }
+
+    public int getHiddenLayerNeuronCount() {
+        return hiddenLayerNeuronCount;
+    }
+
+    public void setHiddenLayerNeuronCount(int hiddenLayerNeuronCount) {
+        this.hiddenLayerNeuronCount = hiddenLayerNeuronCount;
     }
 
 }

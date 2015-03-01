@@ -17,7 +17,7 @@
             }
 
             p {
-                font-size: 16px;
+                font-size: 14px;
             }
 
         </style>
@@ -28,7 +28,7 @@
         <div layout:fragment="content">
             <div class="row">
                 <div class="col-lg-12">
-                    <h2 class="page-header" th:text="#{mlp}">MultiLayer Perceptron</h2>
+                    <h2 class="page-header" th:text="${runner.form.networkName}">MultiLayer Perceptron</h2>
                 </div>
             </div>
             <div class="row">
@@ -39,10 +39,53 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="panel panel-primary">
+                        <div class="panel-heading" th:text="#{mlp.view.network.controls}">Controls</div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div th:if="${runner.calculateLearningStatus().name() == 'RUNNING' || runner.calculateLearningStatus().name() == 'STOPPED' }" >
+                                        <a th:href="@{'/mlp/resume/' + ${mlpId}}" >
+                                            <button class="btn btn-success btn-circle btn-xl disabled center-block"><i class="fa fa-play"></i></button>
+                                        </a>                                   
+                                    </div>
+                                    <div th:if="${runner.calculateLearningStatus().name() == 'PAUSED' }">
+                                        <a th:href="@{'/mlp/resume/' + ${mlpId}}" >
+                                            <button class="btn btn-success btn-circle btn-xl center-block"><i class="fa fa-play"></i></button>
+                                        </a>
+                                    </div>                                  
+                                </div>
+                                <div class="col-lg-4">
+                                    <div th:if="${runner.calculateLearningStatus().name() == 'RUNNING'}" >
+                                        <a th:href="@{'/mlp/pause/' + ${mlpId}}" >
+                                            <button class="btn btn-warning btn-circle btn-xl center-block"><i class="fa fa-pause"></i></button>
+                                        </a>            
+                                    </div>
+                                    <div th:if="${runner.calculateLearningStatus().name() == 'PAUSED' || runner.calculateLearningStatus().name() == 'STOPPED'}" >
+                                        <a th:href="@{'/mlp/pause/' + ${mlpId}}" >
+                                            <button class="btn btn-warning btn-circle btn-xl disabled center-block"><i class="fa fa-pause"></i></button>
+                                        </a>            
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div th:if="${runner.calculateLearningStatus().name() == 'RUNNING' || runner.calculateLearningStatus().name() == 'PAUSED' }" >
+                                        <a th:href="@{'/mlp/stop/' + ${mlpId}}" >
+                                            <button class="btn btn-danger btn-circle btn-xl center-block"><i class="fa fa-stop"></i></button>
+                                        </a>                                       
+                                    </div>
+                                    <div th:if="${runner.calculateLearningStatus().name() == 'STOPPED'}" >
+                                        <a th:href="@{'/mlp/stop/' + ${mlpId}}" >
+                                            <button class="btn btn-danger btn-circle btn-xl disabled center-block"><i class="fa fa-stop"></i></button>
+                                        </a>                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="panel panel-primary">
                         <div class="panel-heading" th:text="#{mlp.view.network.details}">Network details and status</div>
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-lg-9">
                                     <p th:text="${'Learning Status: ' + runner.calculateLearningStatus()}"></p> 
                                     <p th:text="${'Current Iteration: ' + runner.perceptron.getLearningRule().getCurrentIteration()}"></p>
                                     <p th:text="${'Input Size: ' + runner.perceptron.getLearningRule().getTrainingSet().getInputSize()}"></p>
@@ -52,31 +95,9 @@
                                     <p th:text="${'Momentum: ' + runner.form.momentum}"></p> 
                                     <p th:text="#{data.set(${runner.form.dataSetName})}"></p>
                                 </div>
-                                <div class="col-lg-6">
-                                    <div th:if="${runner.calculateLearningStatus().name() == 'RUNNING' }" class="row">
-                                        <div class="col-lg-6">
-                                            <a th:href="@{'/mlp/stop/' + ${mlpId}}" >
-                                                <button class="btn btn-danger btn-circle btn-xl"><i class="fa fa-stop"></i></button>
-                                            </a> 
-                                        </div>
-
-                                        <div class="col-lg-6">
-                                            <a th:href="@{'/mlp/pause/' + ${mlpId}}" >
-                                                <button class="btn btn-warning btn-circle btn-xl"><i class="fa fa-pause"></i></button>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div th:if="${runner.calculateLearningStatus().name() == 'PAUSED' }">
-                                        <a th:href="@{'/mlp/resume/' + ${mlpId}}" >
-                                            <button class="btn btn-success btn-circle btn-xl"><i class="fa fa-play"></i></button>
-                                        </a>
-                                    </div>                                  
-                                </div>
                             </div>
-
-
                         </div>
-                    </div>
+                    </div>  
                 </div>
                 <div class="col-lg-6">
                     <div class="panel panel-yellow">

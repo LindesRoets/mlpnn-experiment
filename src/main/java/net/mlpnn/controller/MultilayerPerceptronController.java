@@ -2,6 +2,7 @@ package net.mlpnn.controller;
 
 import java.util.List;
 import javax.validation.Valid;
+import net.mlpnn.constants.ResourcePath;
 import net.mlpnn.dto.NetworkStatusDTO;
 import net.mlpnn.dto.SigmaGraphDTO;
 import net.mlpnn.enums.DataSetInfo;
@@ -26,7 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author Lindes Roets
  */
 @Controller
-@RequestMapping("/mlp")
+@RequestMapping(ResourcePath.MLP_BASE)
 public class MultilayerPerceptronController {
 
     @Autowired
@@ -53,7 +54,7 @@ public class MultilayerPerceptronController {
         return "mlp-dashboard";
     }
 
-    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    @RequestMapping(value = ResourcePath.MLP_CREATE, method = RequestMethod.GET)
     public String create(Model model) {
         model.addAttribute("mlpForm", new MultilayerPercetpronParametersForm());
         model.addAttribute("datasets", DataSetInfo.values());

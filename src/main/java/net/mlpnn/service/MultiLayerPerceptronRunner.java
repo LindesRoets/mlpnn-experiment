@@ -1,6 +1,7 @@
 package net.mlpnn.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import net.mlpnn.ApplicationConfiguration;
 import net.mlpnn.rep.Edge;
 import net.mlpnn.dto.NetworkStatusDTO;
@@ -17,12 +18,16 @@ import org.neuroph.nnet.MultiLayerPerceptron;
 import org.neuroph.nnet.learning.BackPropagation;
 import org.neuroph.nnet.learning.MomentumBackpropagation;
 import org.neuroph.util.data.norm.MaxMinNormalizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Lindes Roets
  */
 public class MultiLayerPerceptronRunner implements LearningEventListener, Runnable {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(MultiLayerPerceptronRunner.class);
 
     private ApplicationConfiguration config;
 
@@ -38,6 +43,8 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
     private ArrayList<Double> totalNetworkErrors = new ArrayList();
 
     private LearningStatus learningStatus;
+
+    private DataSet[] trainingAndTestDataSet;
 
     /**
      * Initialize the dataset, multilayer perceptron, learning parameters and
@@ -80,7 +87,7 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
     private void initializeLearningParameters(MultilayerPercetpronParametersForm form, MomentumBackpropagation learningRule) {
         learningRule.addListener(this);
         learningRule.setMomentum(form.getMomentum());
-        learningRule.setMaxIterations(10000);
+        learningRule.setMaxIterations(100000);
     }
 
     public void handleLearningEvent(LearningEvent event) {
@@ -97,10 +104,26 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 
     private DataSet initializeDataSet(MultilayerPercetpronParametersForm form) {
         DataSetInfo dataSetInfo = DataSetInfo.valueOf(form.getDataSetName().toUpperCase());
-        String filePath = config.getDatasetFilePath() + "/" + dataSetInfo.localFileName;
-        DataSet dataSet = DataSet.createFromFile(filePath, dataSetInfo.numberOfInputs, dataSetInfo.numberOfOutputs, dataSetInfo.delimiter, true);
+        String filePath = config.getDatasetFilePath() + "/" + dataSetInfo.trainingFileName;
+        DataSet dataSet = DataSet.createFromFile(filePath, dataSetInfo.numberOfInputs, dataSetInfo.numberOfOutputs, ",", true);
         MaxMinNormalizer normalizer = new MaxMinNormalizer();
         normalizer.normalize(dataSet);
+
+        //Split data set into training and test data sets
+        //trainingAndTestDataSet = dataSet.sample(100);
+        //return the training set
+        //return trainingAndTestDataSet[0];
+        Collections.shuffle(dataSet.getRows());
+        LOGGER.info("Data Set size before removal: " + dataSet.getRows().size());
+        int dataSetSize = dataSet.getRows().size();
+        double percent = 80.0 / 100.0;
+        int numberOfRecordsToRemove = (int)(dataSetSize * percent);
+        LOGGER.info("Number of Records to remove: " + numberOfRecordsToRemove);
+        for (int i = 0; i < numberOfRecordsToRemove; i++) {
+            dataSet.getRows().remove(0); //everytime remove the first element in the list
+        }
+        LOGGER.info("Data Set size after removal: " + dataSet.getRows().size());
+
         return dataSet;
     }
 

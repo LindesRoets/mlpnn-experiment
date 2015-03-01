@@ -1,0 +1,24 @@
+package net.mlpnn.test;
+
+import net.mlpnn.ApplicationConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+/**
+ *
+ * @author Lindes Roets
+ */
+@Component
+public class Test2 {
+
+    @Autowired
+    private ApplicationConfiguration config;
+
+    public void setPath(String path) {
+        config.setDatasetFilePath(path);
+    }
+
+    public String getPath() {
+        return config.getDatasetFilePath();
+    }
+}

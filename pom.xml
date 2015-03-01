@@ -41,9 +41,10 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 
                 <configuration>
-<!--                        <jvmArguments>
-                                -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005
-                        </jvmArguments>-->
+                    <jvmArguments>
+                        -Denforcer.skip=true
+                        <!--                                -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005-->
+                    </jvmArguments>
                 </configuration>
                 
             </plugin>                    
@@ -86,6 +87,40 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <exclusions>
+<!--                <exclusion>
+                    <artifactId>commons-codec</artifactId>
+                    <groupId>commons-codec</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>xml-apis</artifactId>
+                    <groupId>xml-apis</groupId>
+                </exclusion>-->
+                <exclusion> 
+                    <artifactId>commons-logging</artifactId> 
+                    <groupId>commons-logging</groupId> 
+                </exclusion>
+            </exclusions>
+            <!--			<version>${selenium-version}</version>-->
+            <version>2.43.1</version>
+            <!--            <scope>test</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-firefox-driver</artifactId>
+
+            <!--			<version>${selenium-version}</version>-->
+            <version>2.43.1</version>
+            <!--            <scope>test</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
         </dependency>
     </dependencies>
 </project>

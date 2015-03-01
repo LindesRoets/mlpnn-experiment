@@ -24,14 +24,14 @@
                         <div class="panel-heading">Perceptrons</div>
                         <div class="panel-body">
                             <p th:if="${#lists.isEmpty(statuses)}">There are no perceptrons training right now.</p>
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover">
+                            <div class="dataTable_wrapper">
+                                <table class="table table-striped table-bordered table-hover" id="mlp-table">
                                     <thead>
-                                        <tr><td>Test name</td><td>Learning Status</td><td>Last Iteration</td><td></td></tr>
+                                        <tr><td>Test name</td><td>Neuron Count</td><td>Learning Status</td><td>Last Iteration</td><td></td></tr>
                                     </thead>
                                     <tbody>
                                         <tr class="info" th:each="status : ${statuses}">
-                                            <td th:text="${status.networkName}"></td><td th:text="${status.learningStatus}"></td><td th:text="${status.currentIteration}"></td><td><a th:href="@{'/mlp/view/'+ ${status.runnerId}}">View</a></td>
+                                            <td th:text="${status.networkName}"></td><td th:text="${status.hiddenLayerNeuronCount}"></td><td th:text="${status.learningStatus}"></td><td th:text="${status.currentIteration}"></td><td><a th:href="@{'/mlp/view/'+ ${status.runnerId}}">View</a></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -46,6 +46,18 @@
                     <a th:href="@{'/mlp/create'}" class="btn btn-primary form-control"><i class="fa fa-plus-square pull-left"></i>Create new MultiLayer Perceptron</a>
                 </div>
             </div>            
+        </div>
+        <div layout:fragment="custom-js">
+            <script th:inline="javascript">
+
+                $(document).ready(function () {
+                    $('#mlp-table').DataTable({
+                        responsive: true
+                    });
+                });
+
+            </script>
+
         </div>
     </body>
 </html>
