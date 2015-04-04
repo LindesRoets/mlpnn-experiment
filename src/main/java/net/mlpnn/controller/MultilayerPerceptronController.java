@@ -1,5 +1,6 @@
 package net.mlpnn.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import javax.validation.Valid;
 import net.mlpnn.constants.ResourcePath;
@@ -96,6 +97,13 @@ public class MultilayerPerceptronController {
     public double[][] graph(@PathVariable Long mlpId, @PathVariable String graphType) {
         MultiLayerPerceptronRunner runner = multiLayerPerceptronService.getMultiLayerPerceptronRunners().get(mlpId);
         return graphService.getFlotChartDoubleArray(runner);
+    }
+
+    @RequestMapping(value = "/graph/all")
+    public String graphAll(Model model) {
+        HashMap<Long, MultiLayerPerceptronRunner> runners = multiLayerPerceptronService.getMultiLayerPerceptronRunners();
+        model.addAttribute("series", graphService.getAllConvergenceErrors(runners));
+        return "mlp-view-all";
     }
 
     @RequestMapping(value = "/stop/{mlpId}")

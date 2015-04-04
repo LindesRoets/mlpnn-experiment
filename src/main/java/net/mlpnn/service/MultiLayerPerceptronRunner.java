@@ -109,20 +109,6 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
         MaxMinNormalizer normalizer = new MaxMinNormalizer();
         normalizer.normalize(dataSet);
 
-        //Split data set into training and test data sets
-        //trainingAndTestDataSet = dataSet.sample(100);
-        //return the training set
-        //return trainingAndTestDataSet[0];
-        Collections.shuffle(dataSet.getRows());
-        LOGGER.info("Data Set size before removal: " + dataSet.getRows().size());
-        int dataSetSize = dataSet.getRows().size();
-        double percent = 80.0 / 100.0;
-        int numberOfRecordsToRemove = (int)(dataSetSize * percent);
-        LOGGER.info("Number of Records to remove: " + numberOfRecordsToRemove);
-        for (int i = 0; i < numberOfRecordsToRemove; i++) {
-            dataSet.getRows().remove(0); //everytime remove the first element in the list
-        }
-        LOGGER.info("Data Set size after removal: " + dataSet.getRows().size());
 
         return dataSet;
     }

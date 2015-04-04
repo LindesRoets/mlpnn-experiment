@@ -43,7 +43,7 @@
                 <configuration>
                     <jvmArguments>
                         -Denforcer.skip=true
-                        <!--                                -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005-->
+                                                        -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005
                     </jvmArguments>
                 </configuration>
                 

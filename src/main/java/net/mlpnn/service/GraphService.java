@@ -1,6 +1,9 @@
 package net.mlpnn.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import net.mlpnn.dto.FlotChartDTO;
 import net.mlpnn.rep.Coordinate;
 import org.springframework.stereotype.Service;
@@ -40,6 +43,24 @@ public class GraphService {
             coordinates[i] = coordinate.getArrayFormat();
         }
 
+        return coordinates;
+    }
+
+    public double[][] getAllConvergenceErrors(HashMap<Long, MultiLayerPerceptronRunner> runners) {
+        Assert.notNull(runners);
+
+        double[][] coordinates = new double[runners.size()][2];
+        Collection<MultiLayerPerceptronRunner> r = runners.values();
+        int count = 0;
+        Iterator<MultiLayerPerceptronRunner> it = r.iterator();
+        while (it.hasNext()) {
+            MultiLayerPerceptronRunner runner = it.next();
+            //int size = runner.getTotalNetworkErrors().size();
+            Coordinate coordinate = new Coordinate(new Double(runner.getForm().getNeuronCount()), new Double(runner.getPerceptron().getLearningRule().getCurrentIteration()));
+            coordinates[count] = coordinate.getArrayFormat();
+            count++;
+
+        }
         return coordinates;
     }
 

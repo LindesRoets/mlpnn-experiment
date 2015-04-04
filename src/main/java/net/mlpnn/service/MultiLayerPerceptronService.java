@@ -106,12 +106,17 @@ public class MultiLayerPerceptronService {
                     Thread.sleep(500);
                     LOGGER.info("We're waiting ....");
                     count++;
-                    if (count > 5) {
+                    if (count > 10) {
                         break;
                     }
                 }
 
-                dto.setCurrentIteration(runner.getPerceptron().getLearningRule().getCurrentIteration());
+                if(runner.getPerceptron()==null){
+                    dto.setCurrentIteration(-1);
+                }else{
+                   dto.setCurrentIteration(runner.getPerceptron().getLearningRule().getCurrentIteration()); 
+                }
+                
                 dto.setLearningStatus(runner.calculateLearningStatus());
                 dto.setNetworkName(runner.getForm().getNetworkName());
                 dto.setRunnerId(mlpId);

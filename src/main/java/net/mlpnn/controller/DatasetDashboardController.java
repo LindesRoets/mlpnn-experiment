@@ -27,13 +27,13 @@ public class DatasetDashboardController {
         dataSetService.downloadDataSets();
         redirect.addFlashAttribute("globalNotification", "Successfully downloaded all the datasets!");
         return "redirect:/dataset/dashboard";
-        
+
     }
 
     @RequestMapping("/download/{dataSetName}")
     public String downloadDataSet(@PathVariable("dataSetName") String dataSetName, RedirectAttributes redirect) throws IOException {
         dataSetService.downloadDataSet(DataSetInfo.valueOf(dataSetName.toUpperCase()));
-        redirect.addFlashAttribute("globalNotification", "Successfully downloaded "+dataSetName);
+        redirect.addFlashAttribute("globalNotification", "Successfully downloaded " + dataSetName);
         return "redirect:/dataset/dashboard";
     }
 
@@ -41,6 +41,13 @@ public class DatasetDashboardController {
     public String show(Model model) {
         model.addAttribute("datasets", DataSetInfo.values());
         return "dataset-dashboard";
+    }
+
+    @RequestMapping("/refactor/{dataSetName}")
+    public String refactorDataSet(@PathVariable("dataSetName") String dataSetName, RedirectAttributes redirect) throws IOException {
+        dataSetService.preprocessDataSet(DataSetInfo.valueOf(dataSetName.toUpperCase()));
+        redirect.addFlashAttribute("globalNotification", "Successfully refactored " + dataSetName);
+        return "redirect:/dataset/dashboard";
     }
 
 }
