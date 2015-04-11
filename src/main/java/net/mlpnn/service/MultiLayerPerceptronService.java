@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import net.mlpnn.ApplicationConfiguration;
 import net.mlpnn.dto.NetworkStatusDTO;
+import net.mlpnn.enums.DataSetInfo;
 import net.mlpnn.form.MultilayerPercetpronParametersForm;
 import org.neuroph.nnet.MultiLayerPerceptron;
 import org.slf4j.Logger;
@@ -111,12 +112,12 @@ public class MultiLayerPerceptronService {
                     }
                 }
 
-                if(runner.getPerceptron()==null){
+                if (runner.getPerceptron() == null) {
                     dto.setCurrentIteration(-1);
-                }else{
-                   dto.setCurrentIteration(runner.getPerceptron().getLearningRule().getCurrentIteration()); 
+                } else {
+                    dto.setCurrentIteration(runner.getPerceptron().getLearningRule().getCurrentIteration());
                 }
-                
+
                 dto.setLearningStatus(runner.calculateLearningStatus());
                 dto.setNetworkName(runner.getForm().getNetworkName());
                 dto.setRunnerId(mlpId);
@@ -126,4 +127,30 @@ public class MultiLayerPerceptronService {
         }
         return statuses;
     }
+
+    public HashMap<DataSetInfo, List<MultiLayerPerceptronRunner>> getRunnersByGroup() {
+
+        HashMap<DataSetInfo, List<MultiLayerPerceptronRunner>> groups = new HashMap<>();
+        for (DataSetInfo dataSet : DataSetInfo.values()) {
+            groups.put(dataSet, new ArrayList<MultiLayerPerceptronRunner>());
+        }
+
+        for (MultiLayerPerceptronRunner runner : multiLayerPerceptronRunners.values()) {
+            groups.get(DataSetInfo.valueOf(runner.getForm().getDataSetName())).add(runner);
+        }
+        return groups;
+    }
+
+    public List<MultiLayerPerceptronRunner> getRunners(DataSetInfo dataSetInfo) {
+        List<MultiLayerPerceptronRunner> runners = new ArrayList<>();
+
+        for(MultiLayerPerceptronRunner runner : multiLayerPerceptronRunners.values()){
+            if(runner.getForm().getDataSetName().equals(dataSetInfo.name())){
+                runners.add(runner);
+            }
+        }
+        return runners;
+    }
+    
+    
 }

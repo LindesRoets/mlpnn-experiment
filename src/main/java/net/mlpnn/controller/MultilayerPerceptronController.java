@@ -1,5 +1,6 @@
 package net.mlpnn.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.validation.Valid;
@@ -92,17 +93,29 @@ public class MultilayerPerceptronController {
         return runner.getNetworkTopology();
     }
 
-    @RequestMapping(value = "/graph/{mlpId}/{graphType}")
+    @RequestMapping(value = "/graph/{mlpId}")
     @ResponseBody
-    public double[][] graph(@PathVariable Long mlpId, @PathVariable String graphType) {
+    public double[][] graph(@PathVariable Long mlpId) {
         MultiLayerPerceptronRunner runner = multiLayerPerceptronService.getMultiLayerPerceptronRunners().get(mlpId);
         return graphService.getFlotChartDoubleArray(runner);
     }
 
+    @RequestMapping(value = "/graph/group/{dataSetInfo}")
+    public String graph(Model model, @PathVariable String dataSetInfo) {
+        List<MultiLayerPerceptronRunner> runners = multiLayerPerceptronService.getRunners(DataSetInfo.valueOf(dataSetInfo));
+        model.addAttribute("runners", runners);
+        model.addAttribute("dataSetInfo", dataSetInfo);
+        return "mlp-graph-by-dataset";
+    }
+    
     @RequestMapping(value = "/graph/all")
     public String graphAll(Model model) {
-        HashMap<Long, MultiLayerPerceptronRunner> runners = multiLayerPerceptronService.getMultiLayerPerceptronRunners();
-        model.addAttribute("series", graphService.getAllConvergenceErrors(runners));
+        HashMap<DataSetInfo, List<MultiLayerPerceptronRunner>> groups = multiLayerPerceptronService.getRunnersByGroup();
+        for (DataSetInfo dataSet : DataSetInfo.values()){
+            List<MultiLayerPerceptronRunner> group = groups.get(dataSet);       
+            model.addAttribute(dataSet.name(), graphService.getAllConvergenceErrors(group));
+        }
+
         return "mlp-view-all";
     }
 
