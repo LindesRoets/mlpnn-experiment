@@ -14,12 +14,12 @@ public class MultiLayerPerceptronCreate {
     @Test
     public void createMLP() throws AWTException, IOException, InterruptedException {
 
-//        for (int i = 1; i < 400; i++) {
-//            MultiLayerPerceptronCreatePage page = new MultiLayerPerceptronCreatePage(TestContext.DRIVER);
-//            page.completeForm("Iris - " + i, i + "", "0.75", "0.75", "Iris");
-//            page.submitForm();
-//            Thread.sleep(100l);
-//        }
+        for (int i = 1; i < 100; i++) {
+            MultiLayerPerceptronCreatePage page = new MultiLayerPerceptronCreatePage(TestContext.DRIVER);
+            page.completeForm("Iris - " + i, i + "", "0.75", "0.75", "Iris");
+            page.submitForm();
+            Thread.sleep(100l);
+        }
 //
 //        for (int i = 200; i < 400; i++) {
 //            MultiLayerPerceptronCreatePage page = new MultiLayerPerceptronCreatePage(TestContext.DRIVER);
@@ -28,12 +28,12 @@ public class MultiLayerPerceptronCreate {
 //            Thread.sleep(100l);
 //        }
 
-        for (int i = 970; i < 1001; i++) {
-            MultiLayerPerceptronCreatePage page = new MultiLayerPerceptronCreatePage(TestContext.DRIVER);
-            page.completeForm("Red Wine Quality - " + i, i + "", "0.75", "0.75", "Red Wine Quality");
-            page.submitForm();
-            Thread.sleep(100l);
-        }
+//        for (int i = 970; i < 1001; i++) {
+//            MultiLayerPerceptronCreatePage page = new MultiLayerPerceptronCreatePage(TestContext.DRIVER);
+//            page.completeForm("Red Wine Quality - " + i, i + "", "0.75", "0.75", "Red Wine Quality");
+//            page.submitForm();
+//            Thread.sleep(100l);
+//        }
 
 //        for (int i = 200; i < 400; i++) {
 //            MultiLayerPerceptronCreatePage page = new MultiLayerPerceptronCreatePage(TestContext.DRIVER);

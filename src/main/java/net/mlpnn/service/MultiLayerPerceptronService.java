@@ -10,11 +10,15 @@ import net.mlpnn.ApplicationConfiguration;
 import net.mlpnn.dto.NetworkStatusDTO;
 import net.mlpnn.enums.DataSetInfo;
 import net.mlpnn.form.MultilayerPercetpronParametersForm;
+import org.neuroph.core.data.DataSet;
+import org.neuroph.core.data.DataSetRow;
 import org.neuroph.nnet.MultiLayerPerceptron;
+import org.neuroph.util.data.norm.MaxMinNormalizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 /**
  *
@@ -144,13 +148,37 @@ public class MultiLayerPerceptronService {
     public List<MultiLayerPerceptronRunner> getRunners(DataSetInfo dataSetInfo) {
         List<MultiLayerPerceptronRunner> runners = new ArrayList<>();
 
-        for(MultiLayerPerceptronRunner runner : multiLayerPerceptronRunners.values()){
-            if(runner.getForm().getDataSetName().equals(dataSetInfo.name())){
+        for (MultiLayerPerceptronRunner runner : multiLayerPerceptronRunners.values()) {
+            if (runner.getForm().getDataSetName().equals(dataSetInfo.name())) {
                 runners.add(runner);
             }
         }
         return runners;
     }
-    
-    
+
+    public void testPerceptron(Long multiLayerPerceptronRunnerId) {
+        MultiLayerPerceptronRunner runner = getMultiLayerPerceptronRunners().get(multiLayerPerceptronRunnerId);
+
+        Assert.notNull(runner, "Need a runner to be able to test the perceptron!");
+        DataSetInfo dataSetInfo = DataSetInfo.valueOf(runner.getForm().getDataSetName());
+        String filePath = config.getDatasetFilePath() + "/" + dataSetInfo.validationFileName;
+
+        //non of the validation data sets contains headers. All validation sets have "," as delimiter
+        DataSet dataSet = DataSet.createFromFile(filePath, dataSetInfo.numberOfInputs, dataSetInfo.numberOfOutputs, ",", false);
+        MaxMinNormalizer normalizer = new MaxMinNormalizer();
+        normalizer.normalize(dataSet);
+
+        MultiLayerPerceptron perceptron = runner.getPerceptron();
+        for (DataSetRow row : dataSet.getRows()) {
+            perceptron.setInput(row.getInput());
+            perceptron.calculate();
+            double[] networkOutput = perceptron.getOutput();
+
+            LOGGER.info("Inputs: " + Arrays.toString(row.getInput()));
+            LOGGER.info("Desired output: " + Arrays.toString(row.getDesiredOutput()));
+            LOGGER.info("Actual output:" + Arrays.toString(networkOutput));
+            LOGGER.info("/n");
+        }
+    }
+
 }

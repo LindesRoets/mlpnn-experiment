@@ -136,4 +136,10 @@ public class MultilayerPerceptronController {
         multiLayerPerceptronService.resumeLearning(mlpId);
         return "redirect:/mlp/view/" + mlpId;
     }
+    
+    @RequestMapping(value = "/test/{mlpId}")
+    public String test(@PathVariable Long mlpId){
+        multiLayerPerceptronService.testPerceptron(mlpId);
+        return "redirect:/mlp/view/" + mlpId;
+    }
 }

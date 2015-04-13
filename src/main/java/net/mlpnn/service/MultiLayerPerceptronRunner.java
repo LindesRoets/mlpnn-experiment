@@ -93,7 +93,8 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
     private void initializeLearningParameters(MultilayerPercetpronParametersForm form, MomentumBackpropagation learningRule) {
         learningRule.addListener(this);
         learningRule.setMomentum(form.getMomentum());
-        learningRule.setMaxIterations(100000);
+        learningRule.setMaxIterations(1000000);
+        //learningRule.setMaxError(0.005);
     }
 
     public void handleLearningEvent(LearningEvent event) {
@@ -122,7 +123,7 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
     private DataSet initializeDataSet(MultilayerPercetpronParametersForm form) {
         DataSetInfo dataSetInfo = DataSetInfo.valueOf(form.getDataSetName().toUpperCase());
         String filePath = config.getDatasetFilePath() + "/" + dataSetInfo.trainingFileName;
-        DataSet dataSet = DataSet.createFromFile(filePath, dataSetInfo.numberOfInputs, dataSetInfo.numberOfOutputs, ",", true);
+        DataSet dataSet = DataSet.createFromFile(filePath, dataSetInfo.numberOfInputs, dataSetInfo.numberOfOutputs, ",", false);
         MaxMinNormalizer normalizer = new MaxMinNormalizer();
         normalizer.normalize(dataSet);
 
