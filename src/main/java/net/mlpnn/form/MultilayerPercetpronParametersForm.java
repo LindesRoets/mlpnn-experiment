@@ -1,5 +1,6 @@
 package net.mlpnn.form;
 
+import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -7,61 +8,63 @@ import org.hibernate.validator.constraints.NotEmpty;
  *
  * @author Lindes Roets
  */
-public class MultilayerPercetpronParametersForm {
-    
-    @NotEmpty
-    private String networkName;
+public class MultilayerPercetpronParametersForm implements Serializable {
 
-    @NotNull
-    private Integer neuronCount;
+	private static final long serialVersionUID = -5129638297481151445L;
 
-    @NotNull
-    private Double momentum;
+	@NotEmpty
+	private String networkName;
 
-    @NotNull
-    private Double learningRate;
+	@NotNull
+	private Integer neuronCount;
 
-    @NotEmpty
-    private String dataSetName;
+	@NotNull
+	private Double momentum;
 
-    public Integer getNeuronCount() {
-        return neuronCount;
-    }
+	@NotNull
+	private Double learningRate;
 
-    public void setNeuronCount(int neuronCount) {
-        this.neuronCount = neuronCount;
-    }
+	@NotEmpty
+	private String dataSetName;
 
-    public Double getMomentum() {
-        return momentum;
-    }
+	public Integer getNeuronCount() {
+		return neuronCount;
+	}
 
-    public void setMomentum(double momentum) {
-        this.momentum = momentum;
-    }
+	public void setNeuronCount(int neuronCount) {
+		this.neuronCount = neuronCount;
+	}
 
-    public Double getLearningRate() {
-        return learningRate;
-    }
+	public Double getMomentum() {
+		return momentum;
+	}
 
-    public void setLearningRate(double learningRate) {
-        this.learningRate = learningRate;
-    }
+	public void setMomentum(double momentum) {
+		this.momentum = momentum;
+	}
 
-    public String getDataSetName() {
-        return dataSetName;
-    }
+	public Double getLearningRate() {
+		return learningRate;
+	}
 
-    public void setDataSetName(String dataSetName) {
-        this.dataSetName = dataSetName;
-    }
+	public void setLearningRate(double learningRate) {
+		this.learningRate = learningRate;
+	}
 
-    public String getNetworkName() {
-        return networkName;
-    }
+	public String getDataSetName() {
+		return dataSetName;
+	}
 
-    public void setNetworkName(String networkName) {
-        this.networkName = networkName;
-    }
+	public void setDataSetName(String dataSetName) {
+		this.dataSetName = dataSetName;
+	}
+
+	public String getNetworkName() {
+		return networkName;
+	}
+
+	public void setNetworkName(String networkName) {
+		this.networkName = networkName;
+	}
 
 }

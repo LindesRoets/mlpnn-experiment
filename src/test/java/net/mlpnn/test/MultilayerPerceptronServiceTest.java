@@ -40,7 +40,7 @@ public class MultilayerPerceptronServiceTest {
         form.setMomentum(0.5);
         form.setNeuronCount(110);
 
-        Long id = multiLayerPerceptronService.startLearning(form);
+        String id = multiLayerPerceptronService.startLearning(form);
 
         Thread.sleep(500);
 
@@ -71,8 +71,8 @@ public class MultilayerPerceptronServiceTest {
         form.setMomentum(0.5);
         form.setNeuronCount(110);
 
-        Long id = multiLayerPerceptronService.startLearning(form);
-        Long id2 = multiLayerPerceptronService.startLearning(form);
+        String id = multiLayerPerceptronService.startLearning(form);
+        String id2 = multiLayerPerceptronService.startLearning(form);
 
         Thread.sleep(500);
 
@@ -115,7 +115,7 @@ public class MultilayerPerceptronServiceTest {
         form.setMomentum(0.5);
         form.setNeuronCount(110);
 
-        Long id = multiLayerPerceptronService.startLearning(form);
+        String id = multiLayerPerceptronService.startLearning(form);
 
         Thread.sleep(500);
 
@@ -146,7 +146,7 @@ public class MultilayerPerceptronServiceTest {
         form.setMomentum(0.5);
         form.setNeuronCount(110);
 
-        Long id = multiLayerPerceptronService.startLearning(form);
+        String id = multiLayerPerceptronService.startLearning(form);
 
         Thread.sleep(500);
 
@@ -177,7 +177,7 @@ public class MultilayerPerceptronServiceTest {
         form.setMomentum(0.5);
         form.setNeuronCount(110);
 
-        Long id = multiLayerPerceptronService.startLearning(form);
+        String id = multiLayerPerceptronService.startLearning(form);
 
         Thread.sleep(500);
 

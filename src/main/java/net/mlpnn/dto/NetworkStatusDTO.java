@@ -12,7 +12,7 @@ public class NetworkStatusDTO {
     private LearningStatus learningStatus;
     private int currentIteration;
     private ArrayList<Double> totalNetworkErrors;
-    private Long runnerId;
+    private String runnerId;
     private String networkName;
     private int hiddenLayerNeuronCount;
 
@@ -40,11 +40,11 @@ public class NetworkStatusDTO {
         this.totalNetworkErrors = totalNetworkErrors;
     }
 
-    public Long getRunnerId() {
+    public String getRunnerId() {
         return runnerId;
     }
 
-    public void setRunnerId(Long runnerId) {
+    public void setRunnerId(String runnerId) {
         this.runnerId = runnerId;
     }
 

@@ -1,5 +1,6 @@
 package net.mlpnn.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,114 +33,126 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping(ResourcePath.MLP_BASE)
 public class MultilayerPerceptronController {
 
-    @Autowired
-    MultiLayerPerceptronService multiLayerPerceptronService;
+	@Autowired
+	MultiLayerPerceptronService multiLayerPerceptronService;
 
-    @Autowired
-    GraphService graphService;
+	@Autowired
+	GraphService graphService;
 
-    @RequestMapping(value = "/train", method = RequestMethod.POST)
-    public String train(Model model, @Valid @ModelAttribute(value = "mlpForm") MultilayerPercetpronParametersForm form, BindingResult result) {
-        if (!result.hasErrors()) {
-            multiLayerPerceptronService.startLearning(form);
-            return "redirect:/mlp/dashboard";
-        } else {
-            model.addAttribute("datasets", DataSetInfo.values());
-            return "mlp-create";
-        }
-    }
+	@RequestMapping(value = "/train", method = RequestMethod.POST)
+	public String train(Model model, @Valid @ModelAttribute(value = "mlpForm") MultilayerPercetpronParametersForm form, BindingResult result) {
+		if (!result.hasErrors()) {
+			multiLayerPerceptronService.startLearning(form);
+			return "redirect:/mlp/dashboard";
+		} else {
+			model.addAttribute("datasets", DataSetInfo.values());
+			return "mlp-create";
+		}
+	}
 
-    @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
-    public String dashboard(Model model) throws InterruptedException {
-        List<NetworkStatusDTO> statuses = multiLayerPerceptronService.getPerceptronStatuses();
-        model.addAttribute("statuses", statuses);
-        return "mlp-dashboard";
-    }
+	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
+	public String dashboard(Model model) throws InterruptedException {
+		List<NetworkStatusDTO> statuses = multiLayerPerceptronService.getPerceptronStatuses();
+		model.addAttribute("statuses", statuses);
+		return "mlp-dashboard";
+	}
 
-    @RequestMapping(value = ResourcePath.MLP_CREATE, method = RequestMethod.GET)
-    public String create(Model model) {
-        model.addAttribute("mlpForm", new MultilayerPercetpronParametersForm());
-        model.addAttribute("datasets", DataSetInfo.values());
-        return "mlp-create";
-    }
+	@RequestMapping(value = ResourcePath.MLP_CREATE, method = RequestMethod.GET)
+	public String create(Model model) {
+		model.addAttribute("mlpForm", new MultilayerPercetpronParametersForm());
+		model.addAttribute("datasets", DataSetInfo.values());
+		return "mlp-create";
+	}
 
-    @RequestMapping(value = "/view/{mlpId}", method = RequestMethod.GET)
-    public String view(Model model, @PathVariable Long mlpId, RedirectAttributes redirect) {
-        MultiLayerPerceptronRunner runner = multiLayerPerceptronService.getMultiLayerPerceptronRunners().get(mlpId);
-        if (runner == null) {
-            redirect.addFlashAttribute("globalNotification", "There was no preceptron to view");
-            return "redirect:/mlp/dashboard";
-        }
-        model.addAttribute("mlpId", mlpId);
-        model.addAttribute("runner", runner);
-        return "mlp-view";
-    }
+	@RequestMapping(value = "/view/{mlpId}", method = RequestMethod.GET)
+	public String view(Model model, @PathVariable String mlpId, RedirectAttributes redirect) {
+		MultiLayerPerceptronRunner runner = multiLayerPerceptronService.getMultiLayerPerceptronRunners().get(mlpId);
+		if (runner == null) {
+			redirect.addFlashAttribute("globalNotification", "There was no preceptron to view");
+			return "redirect:/mlp/dashboard";
+		}
+		model.addAttribute("mlpId", mlpId);
+		model.addAttribute("runner", runner);
+		return "mlp-view";
+	}
 
-    @RequestMapping(value = "/remove/{mlpId}", method = RequestMethod.GET)
-    public String remove(Model model, @PathVariable Long mlpId, RedirectAttributes redirect) {
-        MultiLayerPerceptron perceptron = multiLayerPerceptronService.removeTest(mlpId);
-        if (perceptron == null) {
-            redirect.addFlashAttribute("globalNotification", "There was no preceptron to remove");
-        } else {
-            redirect.addFlashAttribute("globalNotification", "Successfully removed perceptron");
-        }
-        return "redirect:/mlp/dashboard";
-    }
+	@RequestMapping(value = "/remove/{mlpId}", method = RequestMethod.GET)
+	public String remove(Model model, @PathVariable String mlpId, RedirectAttributes redirect) {
+		MultiLayerPerceptron perceptron = multiLayerPerceptronService.removeTest(mlpId);
+		if (perceptron == null) {
+			redirect.addFlashAttribute("globalNotification", "There was no preceptron to remove");
+		} else {
+			redirect.addFlashAttribute("globalNotification", "Successfully removed perceptron");
+		}
+		return "redirect:/mlp/dashboard";
+	}
 
-    @RequestMapping(value = "/topology/{mlpId}", produces = "application/json")
-    @ResponseBody
-    public SigmaGraphDTO topology(@PathVariable Long mlpId) {
-        MultiLayerPerceptronRunner runner = multiLayerPerceptronService.getMultiLayerPerceptronRunners().get(mlpId);
-        return runner.getNetworkTopology();
-    }
+	@RequestMapping(value = "/topology/{mlpId}", produces = "application/json")
+	@ResponseBody
+	public SigmaGraphDTO topology(@PathVariable String mlpId) {
+		MultiLayerPerceptronRunner runner = multiLayerPerceptronService.getMultiLayerPerceptronRunners().get(mlpId);
+		return runner.getNetworkTopology();
+	}
 
-    @RequestMapping(value = "/graph/{mlpId}")
-    @ResponseBody
-    public double[][] graph(@PathVariable Long mlpId) {
-        MultiLayerPerceptronRunner runner = multiLayerPerceptronService.getMultiLayerPerceptronRunners().get(mlpId);
-        return graphService.getFlotChartDoubleArray(runner);
-    }
+	@RequestMapping(value = "/graph/{mlpId}")
+	@ResponseBody
+	public double[][] graph(@PathVariable String mlpId) {
+		MultiLayerPerceptronRunner runner = multiLayerPerceptronService.getMultiLayerPerceptronRunners().get(mlpId);
+		return graphService.getFlotChartDoubleArray(runner);
+	}
 
-    @RequestMapping(value = "/graph/group/{dataSetInfo}")
-    public String graph(Model model, @PathVariable String dataSetInfo) {
-        List<MultiLayerPerceptronRunner> runners = multiLayerPerceptronService.getRunners(DataSetInfo.valueOf(dataSetInfo));
-        model.addAttribute("runners", runners);
-        model.addAttribute("dataSetInfo", dataSetInfo);
-        return "mlp-graph-by-dataset";
-    }
-    
-    @RequestMapping(value = "/graph/all")
-    public String graphAll(Model model) {
-        HashMap<DataSetInfo, List<MultiLayerPerceptronRunner>> groups = multiLayerPerceptronService.getRunnersByGroup();
-        for (DataSetInfo dataSet : DataSetInfo.values()){
-            List<MultiLayerPerceptronRunner> group = groups.get(dataSet);       
-            model.addAttribute(dataSet.name(), graphService.getAllConvergenceErrors(group));
-        }
+	@RequestMapping(value = "/graph/group/{dataSetInfo}")
+	public String graph(Model model, @PathVariable String dataSetInfo) {
+		List<MultiLayerPerceptronRunner> runners = multiLayerPerceptronService.getRunners(DataSetInfo.valueOf(dataSetInfo));
+		model.addAttribute("runners", runners);
+		model.addAttribute("dataSetInfo", dataSetInfo);
+		return "mlp-graph-by-dataset";
+	}
 
-        return "mlp-view-all";
-    }
+	@RequestMapping(value = "/graph/all")
+	public String graphAll(Model model) {
+		HashMap<DataSetInfo, List<MultiLayerPerceptronRunner>> groups = multiLayerPerceptronService.getRunnersByGroup();
+		for (DataSetInfo dataSet : DataSetInfo.values()) {
+			List<MultiLayerPerceptronRunner> group = groups.get(dataSet);
+			model.addAttribute(dataSet.name(), graphService.getAllConvergenceErrors(group));
+		}
 
-    @RequestMapping(value = "/stop/{mlpId}")
-    public String stop(@PathVariable Long mlpId) {
-        multiLayerPerceptronService.stopLearning(mlpId);
-        return "redirect:/mlp/view/" + mlpId;
-    }
+		return "mlp-view-all";
+	}
 
-    @RequestMapping(value = "/pause/{mlpId}")
-    public String pause(@PathVariable Long mlpId) {
-        multiLayerPerceptronService.pauseLearning(mlpId);
-        return "redirect:/mlp/view/" + mlpId;
-    }
+	@RequestMapping(value = "/stop/{mlpId}")
+	public String stop(@PathVariable String mlpId) {
+		multiLayerPerceptronService.stopLearning(mlpId);
+		return "redirect:/mlp/view/" + mlpId;
+	}
 
-    @RequestMapping(value = "/resume/{mlpId}")
-    public String resume(@PathVariable Long mlpId) {
-        multiLayerPerceptronService.resumeLearning(mlpId);
-        return "redirect:/mlp/view/" + mlpId;
-    }
-    
-    @RequestMapping(value = "/test/{mlpId}")
-    public String test(@PathVariable Long mlpId){
-        multiLayerPerceptronService.testPerceptron(mlpId);
-        return "redirect:/mlp/view/" + mlpId;
-    }
+	@RequestMapping(value = "/pause/{mlpId}")
+	public String pause(@PathVariable String mlpId) {
+		multiLayerPerceptronService.pauseLearning(mlpId);
+		return "redirect:/mlp/view/" + mlpId;
+	}
+
+	@RequestMapping(value = "/resume/{mlpId}")
+	public String resume(@PathVariable String mlpId) {
+		multiLayerPerceptronService.resumeLearning(mlpId);
+		return "redirect:/mlp/view/" + mlpId;
+	}
+
+	@RequestMapping(value = "/test/{mlpId}")
+	public String test(@PathVariable String mlpId) {
+		multiLayerPerceptronService.testPerceptron(mlpId);
+		return "redirect:/mlp/view/" + mlpId;
+	}
+
+	@RequestMapping(value = "/save/all")
+	public String save() throws IOException{
+		multiLayerPerceptronService.saveRunners();
+		return "redirect:/mlp/dashboard";
+	}
+	
+	@RequestMapping(value = "/retrieve/all")
+	public String retrieve() throws IOException, ClassNotFoundException{
+		multiLayerPerceptronService.retrieveRunners();
+		return "redirect:/mlp/dashboard";
+	}	
 }
