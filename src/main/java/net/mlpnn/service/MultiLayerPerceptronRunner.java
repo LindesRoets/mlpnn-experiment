@@ -81,14 +81,6 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 		return calculateAndSetLearningStatus(perceptron);
 	}
 
-	public NetworkStatusDTO status() {
-		NetworkStatusDTO status = new NetworkStatusDTO();
-		status.setCurrentIteration(perceptron.getLearningRule().getCurrentIteration());
-		status.setLearningStatus(calculateAndSetLearningStatus(perceptron));
-		status.setTotalNetworkErrors(getTotalNetworkErrors());
-		return status;
-	}
-
 	private void initializeLearningParameters(MultilayerPercetpronParametersForm form, MomentumBackpropagation learningRule) {
 		learningRule.addListener(this);
 		learningRule.setMomentum(form.getMomentum());
@@ -98,7 +90,7 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 
 	public void handleLearningEvent(LearningEvent event) {
 		BackPropagation bp = (BackPropagation) event.getSource();
-		LOGGER.info(bp.getCurrentIteration() + ". iteration : " + bp.getTotalNetworkError());
+		LOGGER.debug(bp.getCurrentIteration() + ". iteration : " + bp.getTotalNetworkError());
 		getTotalNetworkErrors().add(bp.getTotalNetworkError());
 	}
 
@@ -120,7 +112,8 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 	}
 
 	protected DataSet initializeDataSet(MultilayerPercetpronParametersForm form) {
-		DataSetInfo dataSetInfo = DataSetInfo.valueOf(form.getDataSetName().toUpperCase());
+		form.setDataSetName(form.getDataSetName().toUpperCase());
+		DataSetInfo dataSetInfo = DataSetInfo.valueOf(form.getDataSetName());
 		String filePath = config.getDatasetFilePath() + "/" + dataSetInfo.trainingFileName;
 		DataSet dataSet = DataSet.createFromFile(filePath, dataSetInfo.numberOfInputs, dataSetInfo.numberOfOutputs, ",", false);
 		MaxMinNormalizer normalizer = new MaxMinNormalizer();
@@ -130,17 +123,16 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 	}
 
 	private LearningStatus calculateAndSetLearningStatus(MultiLayerPerceptron perceptron) {
-		BackPropagation learningRule = perceptron.getLearningRule();
-		if (learningRule == null) {
-			learningStatus = LearningStatus.STOPPED;
-		} else if (learningRule.isStopped()) {
-			learningStatus = LearningStatus.STOPPED;
-		} else if (learningRule.isPausedLearning()) {
-			learningStatus = LearningStatus.PAUSED;
+		if (perceptron == null || perceptron.getLearningRule() == null) {
+			setLearningStatus(LearningStatus.STOPPED);
+		} else if (perceptron.getLearningRule().isStopped()) {
+			setLearningStatus(LearningStatus.STOPPED);
+		} else if (perceptron.getLearningRule().isPausedLearning()) {
+			setLearningStatus(LearningStatus.PAUSED);
 		} else {
-			learningStatus = LearningStatus.RUNNING;
+			setLearningStatus(LearningStatus.RUNNING);
 		}
-		return learningStatus;
+		return getLearningStatus();
 	}
 
 	public MultiLayerPerceptron getPerceptron() {
@@ -234,6 +226,14 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 		double[][] coordinates = new GraphService().getFlotChartDoubleArray(this);
 		JSONArray ja = new JSONArray(coordinates);
 		return ja;
+	}
+
+	public LearningStatus getLearningStatus() {
+		return learningStatus;
+	}
+
+	public void setLearningStatus(LearningStatus learningStatus) {
+		this.learningStatus = learningStatus;
 	}
 
 }

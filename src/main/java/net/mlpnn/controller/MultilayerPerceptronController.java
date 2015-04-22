@@ -1,11 +1,11 @@
 package net.mlpnn.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.validation.Valid;
 import net.mlpnn.constants.ResourcePath;
+import net.mlpnn.dto.DashBoardDTO;
 import net.mlpnn.dto.NetworkStatusDTO;
 import net.mlpnn.dto.SigmaGraphDTO;
 import net.mlpnn.enums.DataSetInfo;
@@ -13,7 +13,8 @@ import net.mlpnn.form.MultilayerPercetpronParametersForm;
 import net.mlpnn.service.GraphService;
 import net.mlpnn.service.MultiLayerPerceptronRunner;
 import net.mlpnn.service.MultiLayerPerceptronService;
-import org.neuroph.nnet.MultiLayerPerceptron;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +32,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping(ResourcePath.MLP_BASE)
-public class MultilayerPerceptronController {
+public class MultilayerPerceptronController extends BaseController{
+
+	private final Logger LOGGER = LoggerFactory.getLogger(DatasetController.class);
 
 	@Autowired
 	MultiLayerPerceptronService multiLayerPerceptronService;
@@ -50,10 +53,29 @@ public class MultilayerPerceptronController {
 		}
 	}
 
-	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
-	public String dashboard(Model model) throws InterruptedException {
+	@RequestMapping(value = "/train", method = RequestMethod.GET)
+	@ResponseBody
+	public String train(@ModelAttribute(value = "mlpForm") MultilayerPercetpronParametersForm multilayerPercetpronParametersForm) {
+		String runnerID = multiLayerPerceptronService.startLearning(multilayerPercetpronParametersForm);
+		return runnerID;
+	}
+
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public String viewAll(Model model) throws InterruptedException {
 		List<NetworkStatusDTO> statuses = multiLayerPerceptronService.getPerceptronStatuses();
 		model.addAttribute("statuses", statuses);
+		return "mlp-list";
+	}
+
+	@RequestMapping(value = "/dashboard/info", method = RequestMethod.GET)
+	@ResponseBody
+	public DashBoardDTO dashboardInfo() throws InterruptedException {
+		DashBoardDTO dto = multiLayerPerceptronService.getDashBoard();
+		return dto;
+	}
+
+	@RequestMapping(value = "/dashboard")
+	public String dashboard() {
 		return "mlp-dashboard";
 	}
 
@@ -78,13 +100,13 @@ public class MultilayerPerceptronController {
 
 	@RequestMapping(value = "/remove/{mlpId}", method = RequestMethod.GET)
 	public String remove(Model model, @PathVariable String mlpId, RedirectAttributes redirect) {
-		MultiLayerPerceptron perceptron = multiLayerPerceptronService.removeTest(mlpId);
-		if (perceptron == null) {
+		MultiLayerPerceptronRunner runner = multiLayerPerceptronService.removeTest(mlpId);
+		if (runner == null) {
 			redirect.addFlashAttribute("globalNotification", "There was no preceptron to remove");
 		} else {
 			redirect.addFlashAttribute("globalNotification", "Successfully removed perceptron");
 		}
-		return "redirect:/mlp/dashboard";
+		return "redirect:/mlp/list";
 	}
 
 	@RequestMapping(value = "/topology/{mlpId}", produces = "application/json")
@@ -144,15 +166,36 @@ public class MultilayerPerceptronController {
 		return "redirect:/mlp/view/" + mlpId;
 	}
 
-	@RequestMapping(value = "/save/all")
-	public String save() throws IOException{
-		multiLayerPerceptronService.saveRunners();
+	@RequestMapping(value = "/save/{dataSetInfo}")
+	public String save(@PathVariable String dataSetInfo, RedirectAttributes redirect) throws IOException {
+		multiLayerPerceptronService.saveRunners(DataSetInfo.valueOf(dataSetInfo.toUpperCase()));
+		redirect.addFlashAttribute("globalNotification", "Successfully saved perceptrons with dataset: " + dataSetInfo);
 		return "redirect:/mlp/dashboard";
 	}
-	
+
+	@RequestMapping(value = "/retrieve/{dataSetInfo}")
+	public String retrieve(@PathVariable String dataSetInfo, RedirectAttributes redirect) throws IOException, ClassNotFoundException {
+		multiLayerPerceptronService.retrieveRunners(DataSetInfo.valueOf(dataSetInfo.toUpperCase()));
+		redirect.addFlashAttribute("globalNotification", "Successfully retrieved perceptrons with dataset: " + dataSetInfo);
+		return "redirect:/mlp/dashboard";
+	}
+
+	@RequestMapping(value = "/save/all")
+	public String save(RedirectAttributes redirect) {
+
+		try {
+			multiLayerPerceptronService.saveRunners();
+			redirect.addFlashAttribute("globalNotification", "Successfully saved all perceptrons");
+		} catch (IOException io) {
+			LOGGER.error("Saving all perceptrons failed: " + io.getMessage(), io);
+			redirect.addFlashAttribute("globalNotification", "Saving perceptrons failed. IOException occurred. Reason: " + io.getMessage());
+		}
+		return "redirect:/mlp/dashboard";
+	}
+
 	@RequestMapping(value = "/retrieve/all")
-	public String retrieve() throws IOException, ClassNotFoundException{
+	public String retrieve() throws IOException, ClassNotFoundException {
 		multiLayerPerceptronService.retrieveRunners();
 		return "redirect:/mlp/dashboard";
-	}	
+	}
 }

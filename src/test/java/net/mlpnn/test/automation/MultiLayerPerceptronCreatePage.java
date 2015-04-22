@@ -1,4 +1,4 @@
-package net.mlpnn.test;
+package net.mlpnn.test.automation;
 
 import net.mlpnn.constants.ResourcePath;
 import org.junit.Assert;

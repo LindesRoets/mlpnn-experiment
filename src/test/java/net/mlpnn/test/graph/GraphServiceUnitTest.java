@@ -1,4 +1,4 @@
-package net.mlpnn.test;
+package net.mlpnn.test.graph;
 
 import java.util.ArrayList;
 import net.mlpnn.dto.FlotChartDTO;

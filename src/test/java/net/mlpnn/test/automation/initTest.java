@@ -1,4 +1,4 @@
-package net.mlpnn.test;
+package net.mlpnn.test.automation;
 
 import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
@@ -25,7 +25,7 @@ public class initTest {
     public static void setUpSuite() {
         TestContext.DRIVER = new FirefoxDriver();
         TestContext.DRIVER.manage().timeouts().implicitlyWait(4000, TimeUnit.MILLISECONDS);
-        TestContext.DRIVER.manage().timeouts().pageLoadTimeout(25000, TimeUnit.MILLISECONDS);
+        TestContext.DRIVER.manage().timeouts().pageLoadTimeout(120000, TimeUnit.MILLISECONDS);
 
         String baseURL = System.getenv("BASE_URL");
         if (baseURL != null) {

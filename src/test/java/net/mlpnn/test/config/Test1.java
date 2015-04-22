@@ -1,5 +1,6 @@
-package net.mlpnn.test;
+package net.mlpnn.test.config;
 
+import net.mlpnn.ApplicationConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -8,10 +9,10 @@ import org.springframework.stereotype.Component;
  * @author Lindes Roets
  */
 @Component
-public class Test3 {
+public class Test1 {
 
     @Autowired
-    private ApplicationConfigurationPrototype config;
+    private ApplicationConfiguration config;
 
     public void setPath(String path) {
         config.setDatasetFilePath(path);

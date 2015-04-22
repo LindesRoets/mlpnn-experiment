@@ -1,4 +1,4 @@
-package net.mlpnn.test;
+package net.mlpnn.test.automation;
 
 import org.junit.Test;
 
@@ -14,11 +14,11 @@ public class MultiLayerPerceptronCreate {
     @Test
     public void createMLP() throws AWTException, IOException, InterruptedException {
 
-        for (int i = 1; i < 100; i++) {
+        for (int i = 497; i < 600; i++) {
             MultiLayerPerceptronCreatePage page = new MultiLayerPerceptronCreatePage(TestContext.DRIVER);
             page.completeForm("Iris - " + i, i + "", "0.75", "0.75", "Iris");
             page.submitForm();
-            Thread.sleep(100l);
+            Thread.sleep(10000l);
         }
 //
 //        for (int i = 200; i < 400; i++) {

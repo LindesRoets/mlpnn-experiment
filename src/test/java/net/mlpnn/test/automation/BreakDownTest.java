@@ -1,4 +1,4 @@
-package net.mlpnn.test;
+package net.mlpnn.test.automation;
 
 import org.junit.AfterClass;
 import org.junit.Test;

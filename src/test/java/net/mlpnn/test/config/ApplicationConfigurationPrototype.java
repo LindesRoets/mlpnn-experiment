@@ -1,4 +1,4 @@
-package net.mlpnn.test;
+package net.mlpnn.test.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Scope;

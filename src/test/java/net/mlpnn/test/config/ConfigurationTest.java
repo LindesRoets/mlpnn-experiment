@@ -1,4 +1,4 @@
-package net.mlpnn.test;
+package net.mlpnn.test.config;
 
 import net.mlpnn.Application;
 import org.junit.Assert;

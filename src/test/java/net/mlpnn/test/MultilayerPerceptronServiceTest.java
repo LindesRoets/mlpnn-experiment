@@ -10,7 +10,6 @@ import net.mlpnn.service.MultiLayerPerceptronService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.neuroph.nnet.MultiLayerPerceptron;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -52,13 +51,13 @@ public class MultilayerPerceptronServiceTest {
 
         Assert.assertEquals("We are expecting learning to be stopped.", LearningStatus.STOPPED, runner.calculateLearningStatus().STOPPED);
 
-        MultiLayerPerceptron perceptron = multiLayerPerceptronService.removeTest(id);
+        MultiLayerPerceptronRunner runner2 = multiLayerPerceptronService.removeTest(id);
 
-        Assert.assertNotNull("We are expecting to get the perceptron back from the removal action.", perceptron);
+        Assert.assertNotNull("We are expecting to get the perceptron back from the removal action.", runner2);
 
-        perceptron = multiLayerPerceptronService.removeTest(id);
+        runner2 = multiLayerPerceptronService.removeTest(id);
 
-        Assert.assertNull("We are expecting the perceptron to be null since it has already been removed.", perceptron);
+        Assert.assertNull("We are expecting the perceptron to be null since it has already been removed.", runner2);
 
     }
 
@@ -95,14 +94,14 @@ public class MultilayerPerceptronServiceTest {
         Assert.assertEquals("We are expecting learning to be stopped.", LearningStatus.STOPPED, runner2.calculateLearningStatus().STOPPED);
 
         Assert.assertEquals("Expecting 2 perceptrons", 2, multiLayerPerceptronService.getMultiLayerPerceptronRunners().size());
+        
+		MultiLayerPerceptronRunner runner3 = multiLayerPerceptronService.removeTest(id);
 
-        MultiLayerPerceptron perceptron = multiLayerPerceptronService.removeTest(id);
+        Assert.assertNotNull("We are expecting to get the perceptron back from the removal action.", runner3);
 
-        Assert.assertNotNull("We are expecting to get the perceptron back from the removal action.", perceptron);
+        runner3 = multiLayerPerceptronService.removeTest(id);
 
-        perceptron = multiLayerPerceptronService.removeTest(id);
-
-        Assert.assertNull("We are expecting the perceptron to be null since it has already been removed.", perceptron);
+        Assert.assertNull("We are expecting the perceptron to be null since it has already been removed.", runner3);
 
     }
 
@@ -127,13 +126,13 @@ public class MultilayerPerceptronServiceTest {
 
         Assert.assertEquals("We are expecting learning to be stopped.", LearningStatus.STOPPED, runner.calculateLearningStatus().STOPPED);
 
-        MultiLayerPerceptron perceptron = multiLayerPerceptronService.removeTest(id);
+        MultiLayerPerceptronRunner runner2 = multiLayerPerceptronService.removeTest(id);
 
-        Assert.assertNotNull("We are expecting to get the perceptron back from the removal action.", perceptron);
+        Assert.assertNotNull("We are expecting to get the perceptron back from the removal action.", runner2);
 
-        perceptron = multiLayerPerceptronService.removeTest(id);
+        runner2 = multiLayerPerceptronService.removeTest(id);
 
-        Assert.assertNull("We are expecting the perceptron to be null since it has already been removed.", perceptron);
+        Assert.assertNull("We are expecting the perceptron to be null since it has already been removed.", runner2);
 
     }
 
@@ -158,13 +157,13 @@ public class MultilayerPerceptronServiceTest {
 
         }
 
-        MultiLayerPerceptron perceptron = multiLayerPerceptronService.removeTest(id);
+        MultiLayerPerceptronRunner runner2 = multiLayerPerceptronService.removeTest(id);
 
-        Assert.assertNotNull("We are expecting to get the perceptron back from the removal action.", perceptron);
+        Assert.assertNotNull("We are expecting to get the perceptron back from the removal action.", runner2);
 
-        perceptron = multiLayerPerceptronService.removeTest(id);
+        runner2 = multiLayerPerceptronService.removeTest(id);
 
-        Assert.assertNull("We are expecting the perceptron to be null since it has already been removed.", perceptron);
+        Assert.assertNull("We are expecting the perceptron to be null since it has already been removed.", runner2);
 
     }
 
@@ -190,13 +189,13 @@ public class MultilayerPerceptronServiceTest {
 
         Assert.assertEquals("We are expecting learning to be stopped.", LearningStatus.STOPPED, runner.calculateLearningStatus().STOPPED);
 
-        MultiLayerPerceptron perceptron = multiLayerPerceptronService.removeTest(id);
+        MultiLayerPerceptronRunner runner2 = multiLayerPerceptronService.removeTest(id);
 
-        Assert.assertNotNull("We are expecting to get the perceptron back from the removal action.", perceptron);
+        Assert.assertNotNull("We are expecting to get the perceptron back from the removal action.", runner2);
 
-        perceptron = multiLayerPerceptronService.removeTest(id);
+        runner2 = multiLayerPerceptronService.removeTest(id);
 
-        Assert.assertNull("We are expecting the perceptron to be null since it has already been removed.", perceptron);
+        Assert.assertNull("We are expecting the perceptron to be null since it has already been removed.", runner2);
 
     }
 

@@ -11,7 +11,6 @@ public class NetworkStatusDTO {
 
     private LearningStatus learningStatus;
     private int currentIteration;
-    private ArrayList<Double> totalNetworkErrors;
     private String runnerId;
     private String networkName;
     private int hiddenLayerNeuronCount;
@@ -30,14 +29,6 @@ public class NetworkStatusDTO {
 
     public void setLearningStatus(LearningStatus learningStatus) {
         this.learningStatus = learningStatus;
-    }
-
-    public ArrayList<Double> getTotalNetworkErrors() {
-        return totalNetworkErrors;
-    }
-
-    public void setTotalNetworkErrors(ArrayList<Double> totalNetworkErrors) {
-        this.totalNetworkErrors = totalNetworkErrors;
     }
 
     public String getRunnerId() {

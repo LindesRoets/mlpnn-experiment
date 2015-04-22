@@ -1,4 +1,4 @@
-package net.mlpnn.test;
+package net.mlpnn.test.automation;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;

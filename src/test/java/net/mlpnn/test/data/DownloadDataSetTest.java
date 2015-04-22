@@ -1,4 +1,4 @@
-package net.mlpnn.test;
+package net.mlpnn.test.data;
 
 import java.io.File;
 import java.io.IOException;

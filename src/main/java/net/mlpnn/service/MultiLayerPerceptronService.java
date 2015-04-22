@@ -11,12 +11,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import net.mlpnn.ApplicationConfiguration;
+import net.mlpnn.dto.DashBoardDTO;
 import net.mlpnn.dto.NetworkStatusDTO;
 import net.mlpnn.enums.DataSetInfo;
 import net.mlpnn.form.MultilayerPercetpronParametersForm;
+import net.mlpnn.util.Counting;
+import net.mlpnn.util.Sorting;
 import org.neuroph.core.data.DataSet;
 import org.neuroph.core.data.DataSetRow;
 import org.neuroph.nnet.MultiLayerPerceptron;
@@ -66,12 +70,12 @@ public class MultiLayerPerceptronService {
 		this.multiLayerPerceptronRunners = multiLayerPerceptronRunners;
 	}
 
-	public MultiLayerPerceptron removeTest(String multiLayerPerceptronRunnerId) {
+	public MultiLayerPerceptronRunner removeTest(String multiLayerPerceptronRunnerId) {
 		MultiLayerPerceptronRunner runner = getMultiLayerPerceptronRunners().remove(multiLayerPerceptronRunnerId);
 		if (runner == null) {
 			return null;
 		}
-		return runner.getPerceptron();
+		return runner;
 	}
 
 	public MultiLayerPerceptronRunner pauseLearning(String multiLayerPerceptronRunnerId) {
@@ -161,6 +165,7 @@ public class MultiLayerPerceptronService {
 				runners.add(runner);
 			}
 		}
+		Sorting.sortRunnersByNeuronCount(runners);
 		return runners;
 	}
 
@@ -189,12 +194,38 @@ public class MultiLayerPerceptronService {
 		}
 	}
 
+	/**
+	 * Group all runners by dataset and wrtie to file
+	 *
+	 * @throws IOException
+	 */
 	public void saveRunners() throws IOException {
-		String id = UUID.randomUUID().toString();
-		LOGGER.info("Id: " + id);
-		FileOutputStream fout = new FileOutputStream(config.getDatasetFilePath() + "/perceptrons.ser");
+
+		for (DataSetInfo dataSetInfo : DataSetInfo.values()) {
+			saveRunners(dataSetInfo);
+		}
+	}
+
+	/**
+	 * Saves all the runners for which the data set used matches the parameter.
+	 * 
+	 * @param dataSetInfo
+	 * @throws IOException 
+	 */
+	public void saveRunners(DataSetInfo dataSetInfo) throws IOException {
+		FileOutputStream fout = new FileOutputStream(config.getDatasetFilePath() + "/" + dataSetInfo.name() + "-perceptrons.ser");
 		ObjectOutputStream oos = new ObjectOutputStream(fout);
-		oos.writeObject(this.multiLayerPerceptronRunners);
+		
+		//create new array to contain all the runners to be saved
+		HashMap<String, MultiLayerPerceptronRunner> dataSetRunners = new HashMap<>();
+		for (Map.Entry<String, MultiLayerPerceptronRunner> entry : this.multiLayerPerceptronRunners.entrySet()) {
+			if (entry.getValue().getForm().getDataSetName().equalsIgnoreCase(dataSetInfo.name())) {
+				dataSetRunners.put(entry.getKey(), entry.getValue());
+			}
+		}
+		
+		
+		oos.writeObject(dataSetRunners);
 	}
 
 	public void retrieveRunners() throws IOException, ClassNotFoundException {
@@ -204,9 +235,9 @@ public class MultiLayerPerceptronService {
 		ObjectInputStream ois = new ObjectInputStream(bis);
 		Object obj = ois.readObject();
 		ois.close();
-		
+
 		//Re-instantiate the data sets - this was not serialized
-		HashMap<String, MultiLayerPerceptronRunner> runners = (HashMap<String, MultiLayerPerceptronRunner>)obj;
+		HashMap<String, MultiLayerPerceptronRunner> runners = (HashMap<String, MultiLayerPerceptronRunner>) obj;
 		Set<String> ids = runners.keySet();
 		String[] idss = ids.toArray(new String[ids.size()]);
 		List<String> mlpIds = Arrays.asList(idss);
@@ -218,7 +249,35 @@ public class MultiLayerPerceptronService {
 			runner.getPerceptron().getLearningRule().setTrainingSet(dataSet);
 			this.multiLayerPerceptronRunners.put(mlpId, runner);
 		}
-		
+
+	}
+
+	public void retrieveRunners(DataSetInfo dataSetInfo) throws IOException, ClassNotFoundException {
+		//Read all the saved perceptron runners from disk
+		FileInputStream fis = new FileInputStream(config.getDatasetFilePath() + "/" + dataSetInfo.name() + "-perceptrons.ser");
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		ObjectInputStream ois = new ObjectInputStream(bis);
+		Object obj = ois.readObject();
+		ois.close();
+
+		//Re-instantiate the data sets - this was not serialized
+		HashMap<String, MultiLayerPerceptronRunner> runners = (HashMap<String, MultiLayerPerceptronRunner>) obj;
+		for (Map.Entry<String, MultiLayerPerceptronRunner> entry : runners.entrySet()) {
+			MultiLayerPerceptronRunner runner = entry.getValue();
+			DataSet dataSet = runner.initializeDataSet(runner.getForm());
+			runner.getPerceptron().getLearningRule().stopLearning();// we need to explicitly set this to stopped when deserializing a runner 
+			runner.getPerceptron().getLearningRule().setTrainingSet(dataSet);
+			this.multiLayerPerceptronRunners.put(entry.getKey(), runner);
+		}
+
+	}
+
+	public DashBoardDTO getDashBoard() {
+		DashBoardDTO dashboard = new DashBoardDTO();
+		dashboard.setPausedThreadCount(Counting.getPausedThreadCount(this.multiLayerPerceptronRunners.values()));
+		dashboard.setRunningThreadCount(Counting.getLearningThreadCount(this.multiLayerPerceptronRunners.values()));
+		dashboard.setStoppedThreadCount(Counting.getStoppedThreadCount(this.multiLayerPerceptronRunners.values()));
+		return dashboard;
 	}
 
 }

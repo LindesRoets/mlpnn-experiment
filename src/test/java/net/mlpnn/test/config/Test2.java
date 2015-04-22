@@ -1,4 +1,4 @@
-package net.mlpnn.test;
+package net.mlpnn.test.config;
 
 import net.mlpnn.ApplicationConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * @author Lindes Roets
  */
 @Component
-public class Test1 {
+public class Test2 {
 
     @Autowired
     private ApplicationConfiguration config;
