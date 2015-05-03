@@ -26,6 +26,12 @@ mvn test -Dtest=DownloadDataSetTest
 mvn spring-boot:run
 ```
 
+<br/>
+**Create java docs**
+```maven
+mvn javadoc:javadoc
+```
+
 
 
 
