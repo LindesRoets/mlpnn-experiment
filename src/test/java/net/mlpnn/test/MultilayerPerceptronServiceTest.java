@@ -1,7 +1,6 @@
 package net.mlpnn.test;
 
 import net.mlpnn.Application;
-import net.mlpnn.ApplicationConfiguration;
 import net.mlpnn.enums.DataSetInfo;
 import net.mlpnn.enums.LearningStatus;
 import net.mlpnn.form.MultilayerPercetpronParametersForm;
@@ -21,9 +20,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public class MultilayerPerceptronServiceTest {
-
-    @Autowired
-    private ApplicationConfiguration config;
 
     int test = 0;
 

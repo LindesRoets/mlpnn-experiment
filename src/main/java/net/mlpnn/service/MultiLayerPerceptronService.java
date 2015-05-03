@@ -32,6 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 /**
+ * Exposes core service for managing the HashMap of MultiLayerPerceptronRunners
+ *
  *
  * @author Lindes Roets
  */
@@ -43,8 +45,16 @@ public class MultiLayerPerceptronService {
 	@Autowired
 	private ApplicationConfiguration config;
 
+	/**
+	 * The HashMap of MultiLayerPerceptronRunners that is in memory.
+	 */
 	private HashMap<String, MultiLayerPerceptronRunner> multiLayerPerceptronRunners = new HashMap<>();
 
+	/**
+	 *
+	 * @param multiLayerPerceptronRunnerId - the id the uniquely identifies the runner in memory
+	 * @return {@link MultiLayerPerceptronRunner}
+	 */
 	public MultiLayerPerceptronRunner getStatus(String multiLayerPerceptronRunnerId) {
 		MultiLayerPerceptronRunner runner = getMultiLayerPerceptronRunners().get(multiLayerPerceptronRunnerId);
 		if (runner == null) {
@@ -53,6 +63,12 @@ public class MultiLayerPerceptronService {
 		return runner;
 	}
 
+	/**
+	 *
+	 * @param form - {@link MultilayerPercetpronParametersForm}. The form that encapsulates all the parameters necessary to start a new learning
+	 * thread.
+	 * @return The {@link UUID} in string format
+	 */
 	public String startLearning(MultilayerPercetpronParametersForm form) {
 		MultiLayerPerceptronRunner runner = new MultiLayerPerceptronRunner(config, form);
 		Thread thread = new Thread(runner);
@@ -62,14 +78,12 @@ public class MultiLayerPerceptronService {
 		return id;
 	}
 
-	public HashMap<String, MultiLayerPerceptronRunner> getMultiLayerPerceptronRunners() {
-		return multiLayerPerceptronRunners;
-	}
-
-	protected void setMultiLayerPerceptronRunners(HashMap<String, MultiLayerPerceptronRunner> multiLayerPerceptronRunners) {
-		this.multiLayerPerceptronRunners = multiLayerPerceptronRunners;
-	}
-
+	/**
+	 *
+	 * @param multiLayerPerceptronRunnerId - Removes the runner with the matching id from memory. If this dataset has not been persisted this will be
+	 * like a delete.
+	 * @return {@link MultiLayerPerceptronRunner} that was removed from the HashMap.
+	 */
 	public MultiLayerPerceptronRunner removeTest(String multiLayerPerceptronRunnerId) {
 		MultiLayerPerceptronRunner runner = getMultiLayerPerceptronRunners().remove(multiLayerPerceptronRunnerId);
 		if (runner == null) {
@@ -78,6 +92,24 @@ public class MultiLayerPerceptronService {
 		return runner;
 	}
 
+	/**
+	 * Removes all runners from the HashMap. This will basically clear the memory. If you did not write your runners to disk with the save options you
+	 * will loose all your data.
+	 *
+	 * @return true if the the HashMap is empty.
+	 */
+	public boolean removeAllRunners() {
+
+		getMultiLayerPerceptronRunners().clear();
+
+		return getMultiLayerPerceptronRunners().isEmpty();
+	}
+
+	/**
+	 *
+	 * @param multiLayerPerceptronRunnerId - Pause learning for the runner identified by the multiLayerPerceptronRunnerId.
+	 * @return {@link MultiLayerPerceptronRunner}. null if no runner was found with id multiLayerPerceptronRunnerId in memory.
+	 */
 	public MultiLayerPerceptronRunner pauseLearning(String multiLayerPerceptronRunnerId) {
 		MultiLayerPerceptronRunner runner = getMultiLayerPerceptronRunners().get(multiLayerPerceptronRunnerId);
 		if (runner == null) {
@@ -87,6 +119,11 @@ public class MultiLayerPerceptronService {
 		return runner;
 	}
 
+	/**
+	 *
+	 * @param multiLayerPerceptronRunnerId - Stop learning for the runner identified by the multiLayerPerceptronRunnerId.
+	 * @return {@link MultiLayerPerceptronRunner}. null if no runner was found with id multiLayerPerceptronRunnerId in memory.
+	 */
 	public MultiLayerPerceptronRunner stopLearning(String multiLayerPerceptronRunnerId) {
 		MultiLayerPerceptronRunner runner = getMultiLayerPerceptronRunners().get(multiLayerPerceptronRunnerId);
 		if (runner == null) {
@@ -96,6 +133,11 @@ public class MultiLayerPerceptronService {
 		return runner;
 	}
 
+	/**
+	 *
+	 * @param multiLayerPerceptronRunnerId - Resume learning for the runner identified by the multiLayerPerceptronRunnerId.
+	 * @return {@link MultiLayerPerceptronRunner}. null if no runner was found with id multiLayerPerceptronRunnerId in memory.
+	 */
 	public MultiLayerPerceptronRunner resumeLearning(String multiLayerPerceptronRunnerId) {
 		MultiLayerPerceptronRunner runner = getMultiLayerPerceptronRunners().get(multiLayerPerceptronRunnerId);
 		if (runner == null) {
@@ -105,6 +147,11 @@ public class MultiLayerPerceptronService {
 		return runner;
 	}
 
+	/**
+	 * 
+	 * @return {@link List<NetworkStatusDTO>} - Returns a list of all statuses of the learning threads
+	 * @throws InterruptedException
+	 */
 	public List<NetworkStatusDTO> getPerceptronStatuses() throws InterruptedException {
 		List<NetworkStatusDTO> statuses = new ArrayList<>();
 		if (this.getMultiLayerPerceptronRunners() != null && this.getMultiLayerPerceptronRunners().size() > 0) {
@@ -144,11 +191,15 @@ public class MultiLayerPerceptronService {
 		return statuses;
 	}
 
+	/**
+	 * Groups you all the runners by their {@link DataSetInfo}
+	 * @return {@link HashMap<DataSetInfo, List<MultiLayerPerceptronRunner>>}
+	 */
 	public HashMap<DataSetInfo, List<MultiLayerPerceptronRunner>> getRunnersByGroup() {
 
 		HashMap<DataSetInfo, List<MultiLayerPerceptronRunner>> groups = new HashMap<>();
 		for (DataSetInfo dataSet : DataSetInfo.values()) {
-			groups.put(dataSet, new ArrayList<MultiLayerPerceptronRunner>());
+			groups.put(dataSet, new ArrayList<>());
 		}
 
 		for (MultiLayerPerceptronRunner runner : multiLayerPerceptronRunners.values()) {
@@ -157,6 +208,11 @@ public class MultiLayerPerceptronService {
 		return groups;
 	}
 
+	/**
+	 * 
+	 * @param dataSetInfo - The {@link DataSetInfo} by which to filter the runners in memory.
+	 * @return The {@link List<MultiLayerPerceptronRunner>} of filtered runners.
+	 */
 	public List<MultiLayerPerceptronRunner> getRunners(DataSetInfo dataSetInfo) {
 		List<MultiLayerPerceptronRunner> runners = new ArrayList<>();
 
@@ -169,6 +225,10 @@ public class MultiLayerPerceptronService {
 		return runners;
 	}
 
+	/**
+	 * Test the trained perceptron. Prints out the data to screen for each sample tested.
+	 * @param multiLayerPerceptronRunnerId - The runner that contains the trained perceptron to test.
+	 */
 	public void testPerceptron(String multiLayerPerceptronRunnerId) {
 		MultiLayerPerceptronRunner runner = getMultiLayerPerceptronRunners().get(multiLayerPerceptronRunnerId);
 
@@ -197,7 +257,7 @@ public class MultiLayerPerceptronService {
 	/**
 	 * Group all runners by dataset and wrtie to file
 	 *
-	 * @throws IOException
+	 * @throws java.io.IOException
 	 */
 	public void saveRunners() throws IOException {
 
@@ -208,14 +268,14 @@ public class MultiLayerPerceptronService {
 
 	/**
 	 * Saves all the runners for which the data set used matches the parameter.
-	 * 
+	 *
 	 * @param dataSetInfo
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void saveRunners(DataSetInfo dataSetInfo) throws IOException {
 		FileOutputStream fout = new FileOutputStream(config.getDatasetFilePath() + "/" + dataSetInfo.name() + "-perceptrons.ser");
 		ObjectOutputStream oos = new ObjectOutputStream(fout);
-		
+
 		//create new array to contain all the runners to be saved
 		HashMap<String, MultiLayerPerceptronRunner> dataSetRunners = new HashMap<>();
 		for (Map.Entry<String, MultiLayerPerceptronRunner> entry : this.multiLayerPerceptronRunners.entrySet()) {
@@ -223,8 +283,7 @@ public class MultiLayerPerceptronService {
 				dataSetRunners.put(entry.getKey(), entry.getValue());
 			}
 		}
-		
-		
+
 		oos.writeObject(dataSetRunners);
 	}
 
@@ -278,6 +337,14 @@ public class MultiLayerPerceptronService {
 		dashboard.setRunningThreadCount(Counting.getLearningThreadCount(this.multiLayerPerceptronRunners.values()));
 		dashboard.setStoppedThreadCount(Counting.getStoppedThreadCount(this.multiLayerPerceptronRunners.values()));
 		return dashboard;
+	}
+
+	public HashMap<String, MultiLayerPerceptronRunner> getMultiLayerPerceptronRunners() {
+		return multiLayerPerceptronRunners;
+	}
+
+	protected void setMultiLayerPerceptronRunners(HashMap<String, MultiLayerPerceptronRunner> multiLayerPerceptronRunners) {
+		this.multiLayerPerceptronRunners = multiLayerPerceptronRunners;
 	}
 
 }

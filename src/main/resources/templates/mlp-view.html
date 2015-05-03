@@ -44,36 +44,36 @@
                             <div class="row">
                                 <div class="col-lg-4">
                                     <div th:if="${runner.calculateLearningStatus().name() == 'RUNNING' || runner.calculateLearningStatus().name() == 'STOPPED' }" >
-                                        <a th:href="@{'/mlp/resume/' + ${mlpId}}" >
+                                        <a th:href="@{'/mlp/' + ${mlpId} + '/resume'}" >
                                             <button class="btn btn-success btn-circle btn-xl disabled center-block"><i class="fa fa-play"></i></button>
                                         </a>                                   
                                     </div>
                                     <div th:if="${runner.calculateLearningStatus().name() == 'PAUSED' }">
-                                        <a th:href="@{'/mlp/resume/' + ${mlpId}}" >
+                                        <a th:href="@{'/mlp/' + ${mlpId} + '/resume'}" >
                                             <button class="btn btn-success btn-circle btn-xl center-block"><i class="fa fa-play"></i></button>
                                         </a>
                                     </div>                                  
                                 </div>
                                 <div class="col-lg-4">
                                     <div th:if="${runner.calculateLearningStatus().name() == 'RUNNING'}" >
-                                        <a th:href="@{'/mlp/pause/' + ${mlpId}}" >
+                                        <a th:href="@{'/mlp/' + ${mlpId} + '/pause'}" >
                                             <button class="btn btn-warning btn-circle btn-xl center-block"><i class="fa fa-pause"></i></button>
                                         </a>            
                                     </div>
                                     <div th:if="${runner.calculateLearningStatus().name() == 'PAUSED' || runner.calculateLearningStatus().name() == 'STOPPED'}" >
-                                        <a th:href="@{'/mlp/pause/' + ${mlpId}}" >
+                                        <a th:href="@{'/mlp/' + ${mlpId} + '/pause'}" >
                                             <button class="btn btn-warning btn-circle btn-xl disabled center-block"><i class="fa fa-pause"></i></button>
                                         </a>            
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div th:if="${runner.calculateLearningStatus().name() == 'RUNNING' || runner.calculateLearningStatus().name() == 'PAUSED' }" >
-                                        <a th:href="@{'/mlp/stop/' + ${mlpId}}" >
+                                        <a th:href="@{'/mlp/' + ${mlpId} + '/stop'}" >
                                             <button class="btn btn-danger btn-circle btn-xl center-block"><i class="fa fa-stop"></i></button>
                                         </a>                                       
                                     </div>
                                     <div th:if="${runner.calculateLearningStatus().name() == 'STOPPED'}" >
-                                        <a th:href="@{'/mlp/stop/' + ${mlpId}}" >
+                                        <a th:href="@{'/mlp/' + ${mlpId} + '/stop'}" >
                                             <button class="btn btn-danger btn-circle btn-xl disabled center-block"><i class="fa fa-stop"></i></button>
                                         </a>                                       
                                     </div>
@@ -147,33 +147,33 @@
 				$(document).ready(function () {
 
 					$(function () {
+
 						var data = [];
 						var alreadyFetched = {};
 						var mlpId = /*[[${mlpId}]]*/'1';
 						var learningStatus = /*[[${runner.calculateLearningStatus().name()}]]*/'RUNNING';
 						$.plot("#netErrorGraphPlaceholder", data);
-						var iteration = 0;
+
 						function fetchData() {
-							++iteration;
+
 							function onDataReceived(series) {
 								// Load all the data in one pass; if we only got partial
 								// data we could merge it with what we already have.
 								data = [series];
 								$.plot("#netErrorGraphPlaceholder", data);
+								setTimeout(fetchData, 5000);
 							}
+
 							$.ajax({
-								url: "/mlp/graph/" + mlpId + "",
+								url: "/mlp/" + mlpId + "/graph",
 								type: "GET",
 								dataType: "json",
-								success: onDataReceived
+								success: onDataReceived,
+								fail: setTimeout(fetchData, 5000)
 							});
-							if (learningStatus === 'RUNNING') {
-								setTimeout(fetchData, 5000);
-							} else {
-								data = [];
-								alreadyFetched = {};
-							}
+
 						}
+
 						setTimeout(fetchData, 500);
 
 					});
@@ -192,7 +192,7 @@
 						return neighbors;
 					});
 					var mlpId = /*[[${mlpId}]]*/'1';
-					sigma.parsers.json('/mlp/topology/' + mlpId, {
+					sigma.parsers.json('/mlp/' + mlpId + '/topology', {
 						container: 'container',
 						settings: {
 							defaultNodeColor: '#d9534f'
