@@ -149,8 +149,8 @@ public class MultiLayerPerceptronService {
 
 	/**
 	 * 
-	 * @return {@link List<NetworkStatusDTO>} - Returns a list of all statuses of the learning threads
-	 * @throws InterruptedException
+	 * @return list of {@link NetworkStatusDTO} - Returns a list of all statuses of the learning threads
+	 * @throws InterruptedException - 
 	 */
 	public List<NetworkStatusDTO> getPerceptronStatuses() throws InterruptedException {
 		List<NetworkStatusDTO> statuses = new ArrayList<>();
@@ -192,8 +192,8 @@ public class MultiLayerPerceptronService {
 	}
 
 	/**
-	 * Groups you all the runners by their {@link DataSetInfo}
-	 * @return {@link HashMap<DataSetInfo, List<MultiLayerPerceptronRunner>>}
+	 * Groups all the runners by their {@link DataSetInfo}
+	 * @return HashMap with {@link DataSetInfo} as key
 	 */
 	public HashMap<DataSetInfo, List<MultiLayerPerceptronRunner>> getRunnersByGroup() {
 
@@ -211,7 +211,7 @@ public class MultiLayerPerceptronService {
 	/**
 	 * 
 	 * @param dataSetInfo - The {@link DataSetInfo} by which to filter the runners in memory.
-	 * @return The {@link List<MultiLayerPerceptronRunner>} of filtered runners.
+	 * @return The list of {@link MultiLayerPerceptronRunner} of filtered runners.
 	 */
 	public List<MultiLayerPerceptronRunner> getRunners(DataSetInfo dataSetInfo) {
 		List<MultiLayerPerceptronRunner> runners = new ArrayList<>();
@@ -257,7 +257,7 @@ public class MultiLayerPerceptronService {
 	/**
 	 * Group all runners by dataset and wrtie to file
 	 *
-	 * @throws java.io.IOException
+	 * @throws java.io.IOException - 
 	 */
 	public void saveRunners() throws IOException {
 
@@ -269,8 +269,8 @@ public class MultiLayerPerceptronService {
 	/**
 	 * Saves all the runners for which the data set used matches the parameter.
 	 *
-	 * @param dataSetInfo
-	 * @throws IOException
+	 * @param dataSetInfo {@link DataSetInfo}
+	 * @throws IOException - 
 	 */
 	public void saveRunners(DataSetInfo dataSetInfo) throws IOException {
 		FileOutputStream fout = new FileOutputStream(config.getDatasetFilePath() + "/" + dataSetInfo.name() + "-perceptrons.ser");

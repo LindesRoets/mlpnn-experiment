@@ -201,10 +201,10 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 
 	/**
 	 *
-	 * Exposes {@link this.calculateAndSetLearningStatus}. Caller don't need a handle to the
+	 * Exposes calculateAndSetLearningStatus. Caller don't need a handle to the
 	 * perceptron
 	 *
-	 * @return
+	 * @return {@link LearningStatus}
 	 */
 	public LearningStatus calculateLearningStatus() {
 		return calculateAndSetLearningStatus(perceptron);
@@ -234,7 +234,7 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 	/**
 	 * 
 	 * Translates the network topology to {@link SigmaGraphDTO} that is used for rendering graphs with the Sigma Graphs javascript plugin.
-	 * @return 
+	 * @return {@link SigmaGraphDTO}
 	 */
 	public SigmaGraphDTO getNetworkTopology() {
 

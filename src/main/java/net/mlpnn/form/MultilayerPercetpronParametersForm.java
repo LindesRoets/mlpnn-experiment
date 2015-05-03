@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 /**
  *
  * The form captures all the inputs from the client to initialize training of a
- * {@link MultiLayerPerceptron}
+ * {@link org.neuroph.nnet.MultiLayerPerceptron}
  *
  * @author Lindes Roets
  */
@@ -17,7 +17,7 @@ public class MultilayerPercetpronParametersForm implements Serializable {
 	private static final long serialVersionUID = -5129638297481151445L;
 
 	/**
-	 * Used for display in interface. The name of a specific {@link MultiLayerPerceptronRunner}
+	 * Used for display in interface. The name of a specific {@link net.mlpnn.service.MultiLayerPerceptronRunner}
 	 */
 	@NotEmpty
 	private String networkName;
