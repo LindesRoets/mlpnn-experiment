@@ -14,6 +14,13 @@
 		<start-class>net.mlpnn.Application</start-class>
 		<java.version>1.8</java.version>
 	</properties>
+	<repositories>
+		<repository>
+			<id>org.neuroph</id>
+			<name>neuroph-core</name>
+			<url>http://neuroph.sourceforge.net/maven2</url>
+		</repository>
+	</repositories>
 	<build>
 		<plugins>
 			<plugin>
@@ -42,13 +49,17 @@
                 
 				<configuration>
 					<jvmArguments>
-						-Denforcer.skip=true
 						-Xms2048m -Xmx4096m -XX:MaxPermSize=2048m
 <!--						-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005-->
 					</jvmArguments>
 				</configuration>
                 
-			</plugin>                    
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.3</version>
+			</plugin>                   
 		</plugins>
 	</build>
 	<dependencies>
@@ -90,33 +101,9 @@
 			<version>2.4</version>
 		</dependency>
 		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-java</artifactId>
-			<exclusions>
-				<!--                <exclusion>
-					<artifactId>commons-codec</artifactId>
-					<groupId>commons-codec</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>xml-apis</artifactId>
-					<groupId>xml-apis</groupId>
-				</exclusion>-->
-				<exclusion> 
-					<artifactId>commons-logging</artifactId> 
-					<groupId>commons-logging</groupId> 
-				</exclusion>
-			</exclusions>
-			<!--			<version>${selenium-version}</version>-->
-			<version>2.43.1</version>
-			<!--            <scope>test</scope>-->
-		</dependency>
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-firefox-driver</artifactId>
-
-			<!--			<version>${selenium-version}</version>-->
-			<version>2.43.1</version>
-			<!--            <scope>test</scope>-->
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20141113</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>

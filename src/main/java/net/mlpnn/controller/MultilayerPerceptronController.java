@@ -32,7 +32,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping(ResourcePath.MLP_BASE)
-public class MultilayerPerceptronController extends BaseController{
+public class MultilayerPerceptronController extends BaseController {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(DatasetController.class);
 
@@ -86,7 +86,7 @@ public class MultilayerPerceptronController extends BaseController{
 		return "mlp-create";
 	}
 
-	@RequestMapping(value = "/view/{mlpId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{mlpId}/view", method = RequestMethod.GET)
 	public String view(Model model, @PathVariable String mlpId, RedirectAttributes redirect) {
 		MultiLayerPerceptronRunner runner = multiLayerPerceptronService.getMultiLayerPerceptronRunners().get(mlpId);
 		if (runner == null) {
@@ -98,7 +98,7 @@ public class MultilayerPerceptronController extends BaseController{
 		return "mlp-view";
 	}
 
-	@RequestMapping(value = "/remove/{mlpId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{mlpId}/remove", method = RequestMethod.GET)
 	public String remove(Model model, @PathVariable String mlpId, RedirectAttributes redirect) {
 		MultiLayerPerceptronRunner runner = multiLayerPerceptronService.removeTest(mlpId);
 		if (runner == null) {
@@ -109,14 +109,25 @@ public class MultilayerPerceptronController extends BaseController{
 		return "redirect:/mlp/list";
 	}
 
-	@RequestMapping(value = "/topology/{mlpId}", produces = "application/json")
+	@RequestMapping(value = "/remove/all", method = RequestMethod.GET)
+	public String removeAll(Model model, RedirectAttributes redirect) {
+		boolean isRunnersEmpty = multiLayerPerceptronService.removeAllRunners();
+		if (isRunnersEmpty) {
+			redirect.addFlashAttribute("globalNotification", "Successfully removed all perceptron");
+		} else {
+			redirect.addFlashAttribute("globalNotification", "Could not remove perceptrons");
+		}
+		return "redirect:/mlp/dashboard";
+	}
+
+	@RequestMapping(value = "/{mlpId}/topology", produces = "application/json")
 	@ResponseBody
 	public SigmaGraphDTO topology(@PathVariable String mlpId) {
 		MultiLayerPerceptronRunner runner = multiLayerPerceptronService.getMultiLayerPerceptronRunners().get(mlpId);
 		return runner.getNetworkTopology();
 	}
 
-	@RequestMapping(value = "/graph/{mlpId}")
+	@RequestMapping(value = "/{mlpId}/graph")
 	@ResponseBody
 	public double[][] graph(@PathVariable String mlpId) {
 		MultiLayerPerceptronRunner runner = multiLayerPerceptronService.getMultiLayerPerceptronRunners().get(mlpId);
@@ -142,28 +153,28 @@ public class MultilayerPerceptronController extends BaseController{
 		return "mlp-view-all";
 	}
 
-	@RequestMapping(value = "/stop/{mlpId}")
+	@RequestMapping(value = "/{mlpId}/stop")
 	public String stop(@PathVariable String mlpId) {
 		multiLayerPerceptronService.stopLearning(mlpId);
-		return "redirect:/mlp/view/" + mlpId;
+		return "redirect:/mlp/" + mlpId +"/view";
 	}
 
-	@RequestMapping(value = "/pause/{mlpId}")
+	@RequestMapping(value = "/{mlpId}/pause")
 	public String pause(@PathVariable String mlpId) {
 		multiLayerPerceptronService.pauseLearning(mlpId);
-		return "redirect:/mlp/view/" + mlpId;
+		return "redirect:/mlp/" + mlpId +"/view";
 	}
 
-	@RequestMapping(value = "/resume/{mlpId}")
+	@RequestMapping(value = "/{mlpId}/resume")
 	public String resume(@PathVariable String mlpId) {
 		multiLayerPerceptronService.resumeLearning(mlpId);
-		return "redirect:/mlp/view/" + mlpId;
+		return "redirect:/mlp/" + mlpId +"/view";
 	}
 
-	@RequestMapping(value = "/test/{mlpId}")
+	@RequestMapping(value = "/{mlpId}/test")
 	public String test(@PathVariable String mlpId) {
 		multiLayerPerceptronService.testPerceptron(mlpId);
-		return "redirect:/mlp/view/" + mlpId;
+		return "redirect:/mlp/" + mlpId +"/view";
 	}
 
 	@RequestMapping(value = "/save/{dataSetInfo}")

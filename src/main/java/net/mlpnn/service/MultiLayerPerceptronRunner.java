@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import net.mlpnn.ApplicationConfiguration;
 import net.mlpnn.rep.Edge;
-import net.mlpnn.dto.NetworkStatusDTO;
 import net.mlpnn.rep.Node;
 import net.mlpnn.dto.SigmaGraphDTO;
 import net.mlpnn.enums.DataSetInfo;
@@ -28,8 +27,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 /**
+ * The Class that represents the learning thread in memory. Referred to as a runner henceforth. This
+ * class gets instantiated in its own thread to encapsulate learning threads with their system
+ * configuration and inputs.
  *
  * @author Lindes Roets
+ *
  */
 public class MultiLayerPerceptronRunner implements LearningEventListener, Runnable, Serializable {
 
@@ -48,14 +51,17 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 
 	private MultiLayerPerceptron perceptron;
 
+	/**
+	 * After each epoch, this list gets updated with the Total Squared Error
+	 */
 	private ArrayList<Double> totalNetworkErrors = new ArrayList();
 
 	private LearningStatus learningStatus;
 
 	/**
-	 * Initialize the dataset, multilayer perceptron, learning parameters and starts training
+	 * Initialize the dataset, multilayer perceptron, learning parameters and starts training.
 	 *
-	 * @param form
+	 * @return {@link LearningStatus}
 	 */
 	public LearningStatus start() {
 		setTotalNetworkErrors(new ArrayList<>());
@@ -66,21 +72,44 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 		return calculateAndSetLearningStatus(perceptron);
 	}
 
+	/**
+	 * Excecutes the stop command on the learning rule class of the perceptron.
+	 *
+	 * @return The newly calculated {@link LearningStatus} of the {@link MultiLayerPerceptronRunner}
+	 */
 	public LearningStatus stop() {
 		perceptron.getLearningRule().stopLearning();
 		return calculateAndSetLearningStatus(perceptron);
 	}
 
+	/**
+	 * Executes the pause command on the learning rule class of the perceptron.
+	 *
+	 * @return The newly calculated {@link LearningStatus} of the {@link MultiLayerPerceptronRunner}
+	 */
 	public LearningStatus pause() {
 		perceptron.getLearningRule().pause();
 		return calculateAndSetLearningStatus(perceptron);
 	}
 
+	/**
+	 * Executes the resume command on the learning rule class of the perceptron.
+	 *
+	 * @return The newly calculated {@link LearningStatus} of the {@link MultiLayerPerceptronRunner}
+	 */
 	public LearningStatus resume() {
 		perceptron.getLearningRule().resume();
 		return calculateAndSetLearningStatus(perceptron);
 	}
 
+	/**
+	 * Sets the momentum, max iterations before learning should automatically stop and binds this
+	 * class as a listener to the {@link MomentumBackpropagation}
+	 *
+	 * @param form {@link MultilayerPercetpronParametersForm}
+	 * @param learningRule {@link MomentumBackpropagation} for adding this class as an event
+	 * listener
+	 */
 	private void initializeLearningParameters(MultilayerPercetpronParametersForm form, MomentumBackpropagation learningRule) {
 		learningRule.addListener(this);
 		learningRule.setMomentum(form.getMomentum());
@@ -88,12 +117,29 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 		//learningRule.setMaxError(0.005);
 	}
 
+	/**
+	 * In debug mode, this will print the current iteration number and the totla network error
+	 * value.
+	 *
+	 * @param event The {@link LearningEvent} that was triggered
+	 */
+	@Override
 	public void handleLearningEvent(LearningEvent event) {
 		BackPropagation bp = (BackPropagation) event.getSource();
-		LOGGER.debug(bp.getCurrentIteration() + ". iteration : " + bp.getTotalNetworkError());
-		getTotalNetworkErrors().add(bp.getTotalNetworkError());
+		if (bp instanceof BackPropagation) {
+			LOGGER.debug(bp.getCurrentIteration() + ". iteration : " + bp.getTotalNetworkError());
+			getTotalNetworkErrors().add(bp.getTotalNetworkError());
+		}
 	}
 
+	/**
+	 * Creates a new {@link MultiLayerPerceptron} with the given data set. Initialize weight for all
+	 * connections to 0.4. Apply {@link NguyenWidrowRandomizer} with a min of -0.7 and a max of 0.7
+	 *
+	 * @param form {@link MultilayerPercetpronParametersForm}
+	 * @param dataSet {@link DataSet}
+	 * @return {@link MultiLayerPerceptron}
+	 */
 	private MultiLayerPerceptron initializeMultilayerPerceptron(MultilayerPercetpronParametersForm form, DataSet dataSet) {
 		MultiLayerPerceptron mp = new MultiLayerPerceptron(dataSet.getInputSize(), form.getNeuronCount(), dataSet.getOutputSize());
 		for (Layer layer : mp.getLayers()) {
@@ -111,6 +157,13 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 
 	}
 
+	/**
+	 * The {@link DataSet} is created by the training file for the {@link DataSetInfo} that was
+	 * created. The inputs are normalized with {@link MaxMinNormalizer}
+	 *
+	 * @param form {@link MultilayerPercetpronParametersForm}
+	 * @return {@link DataSet}
+	 */
 	protected DataSet initializeDataSet(MultilayerPercetpronParametersForm form) {
 		form.setDataSetName(form.getDataSetName().toUpperCase());
 		DataSetInfo dataSetInfo = DataSetInfo.valueOf(form.getDataSetName());
@@ -122,6 +175,13 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 		return dataSet;
 	}
 
+	/**
+	 * Calculates the {@link MultiLayerPerceptronRunner} status from the
+	 * {@link MultiLayerPerceptron}s learning rule
+	 *
+	 * @param perceptron
+	 * @return
+	 */
 	private LearningStatus calculateAndSetLearningStatus(MultiLayerPerceptron perceptron) {
 		if (perceptron == null || perceptron.getLearningRule() == null) {
 			setLearningStatus(LearningStatus.STOPPED);
@@ -139,6 +199,13 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 		return perceptron;
 	}
 
+	/**
+	 *
+	 * Exposes calculateAndSetLearningStatus. Caller don't need a handle to the
+	 * perceptron
+	 *
+	 * @return {@link LearningStatus}
+	 */
 	public LearningStatus calculateLearningStatus() {
 		return calculateAndSetLearningStatus(perceptron);
 	}
@@ -164,6 +231,11 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 		totalNetworkErrors = aTotalNetworkErrors;
 	}
 
+	/**
+	 * 
+	 * Translates the network topology to {@link SigmaGraphDTO} that is used for rendering graphs with the Sigma Graphs javascript plugin.
+	 * @return {@link SigmaGraphDTO}
+	 */
 	public SigmaGraphDTO getNetworkTopology() {
 
 		SigmaGraphDTO dto = new SigmaGraphDTO();
@@ -193,6 +265,12 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 		return dto;
 	}
 
+	/**
+	 * Creates a list of {@link Node} objects based on the all the nodes in the perceptron
+	 * All nodes get a size = 3. This is a display property that can be overridden by interfacing with the node itself.
+	 * Y increments in 600 units and defines the layers.
+	 * @return 
+	 */
 	private ArrayList<Node> getNodes() {
 		ArrayList<Node> nodes = new ArrayList<>();
 		Layer[] layers = perceptron.getLayers();

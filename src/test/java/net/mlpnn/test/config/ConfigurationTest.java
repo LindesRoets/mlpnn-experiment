@@ -1,6 +1,7 @@
 package net.mlpnn.test.config;
 
 import net.mlpnn.Application;
+import net.mlpnn.ApplicationConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +16,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public class ConfigurationTest {
-
+	
+    @Autowired
+    private ApplicationConfiguration config;
+	
     @Autowired
     private Test1 test1;
 
@@ -30,9 +34,10 @@ public class ConfigurationTest {
 
     @Test
     public void testConfigInjectionSingleton() {
+		System.out.println("Config path for data file: "+config.getDatasetFilePath());
 
-        Assert.assertEquals("/tmp", test1.getPath());
-        Assert.assertEquals("/tmp", test2.getPath());
+        Assert.assertEquals("data", test1.getPath());
+        Assert.assertEquals("data", test2.getPath());
 
         test1.setPath("/tmp2");
 
@@ -43,12 +48,13 @@ public class ConfigurationTest {
     @Test
     public void testConfigInjectionPrototype() {
 
-        Assert.assertEquals("/tmp", test3.getPath());
-        Assert.assertEquals("/tmp", test4.getPath());
+        Assert.assertEquals("data", test3.getPath());
+        Assert.assertEquals("data", test4.getPath());
 
         test3.setPath("/tmp2");
 
-        Assert.assertEquals("/tmp", test4.getPath());
+		//Testing that setting test3 path did not change test4 path since it is not singletons
+        Assert.assertEquals("data", test4.getPath());
 
     }
 

@@ -14,8 +14,8 @@
 							</div>
 						</div>-->
 
-            <div class="row top-buffer">
-                <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12 top-buffer">
                     <div th:replace="fragments :: globalNotification"></div>
                 </div>              
             </div>
@@ -31,7 +31,7 @@
                                     </thead>
                                     <tbody>
                                         <tr class="info" th:each="status : ${statuses}">
-                                            <td th:text="${status.networkName}"></td><td th:text="${status.hiddenLayerNeuronCount}"></td><td th:text="${status.learningStatus}"></td><td th:text="${status.currentIteration}"></td><td><a th:href="@{'/mlp/view/'+ ${status.runnerId}}">View</a> | <a th:href="@{'/mlp/remove/'+ ${status.runnerId}}">Remove</a></td>
+                                            <td th:text="${status.networkName}"></td><td th:text="${status.hiddenLayerNeuronCount}"></td><td th:text="${status.learningStatus}"></td><td th:text="${status.currentIteration}"></td><td><a th:href="@{'/mlp/'+ ${status.runnerId} + '/view'}">View</a> | <a th:href="@{'/mlp/'+ ${status.runnerId} + '/stop'}">Stop</a> | <a th:href="@{'/mlp/'+ ${status.runnerId} + '/pause'}">Pause</a> | <a th:href="@{'/mlp/'+ ${status.runnerId} + '/resume'}">Resume</a> | <a th:href="@{'/mlp/'+ ${status.runnerId} + '/remove'}">Remove</a></td>
                                         </tr>
                                     </tbody>
                                 </table>
