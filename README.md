@@ -21,7 +21,7 @@ mvn javadoc:javadoc
 ```
 
 <br/>
-**Execute tests*
+**Execute tests**
 ```
 mvn test
 ```
@@ -50,6 +50,9 @@ mvn package
 java -jar <jar-file-name>.jar
 ```
 
+
+***Requirements***
+java 1.8.0.*
 
 
 
