@@ -1,101 +1,136 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+	<head>
+		<meta charset='utf-8'>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+		<link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+		<link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+		<!--[if lt IE 9]>
+		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
 
-    <title>Mlpnn-experiment by LindesRoets</title>
-  </head>
+		<title>Multilayer Perceptron Web Application by Lindes Roets</title>
+	</head>
 
-  <body>
-    <header>
-      <div class="inner">
-        <h1>Mlpnn-experiment</h1>
-        <h2>A Multilayer Perceptron Web Application Built on Neuroph Core module with Spring-boot, Maven, Thymeleaf </h2>
-        <a href="https://github.com/LindesRoets/mlpnn-experiment" class="button"><small>View project on</small> GitHub</a>
-      </div>
-    </header>
+	<body>
+		<header>
+			<div class="inner">
+				<h1>Multilayer Perceptron Web Application</h1>
+				<h2>Built on Neuroph Core module with Spring-Boot, Maven and Thymeleaf </h2>
+				<a href="https://github.com/LindesRoets/mlpnn-experiment" class="button"><small>View project on</small> GitHub</a>
+			</div>
+		</header>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h2></a>Multilayer Perceptron Web Application</h2>
-          <p>A web application for experimentation with training perceptrons. This includes automatic donwload of data sets, transormation and
-          creation of test and validation data sets. There is a dashboard to view the status of your training trheads. A list view gives you a list of all 
-          the learning threads in memory. You can view the perceptron in detail view, with a convergence graph refreshing every 5 seconds. Also see
-          a grahpical representation of the perceptron on the details page. Compare all the convergence graphs of the different data sets and more.
-          </p>
+		<div id="content-wrapper">
+			<div class="inner clearfix">
+				<section id="main-content">
+					<h2></a>Multilayer Perceptron Web Application</h2>
+					<p>A web application for experimentation with training perceptrons. This includes automatic donwload of data sets, transormation and
+						creation of test and validation data sets. There is a dashboard to view the status of your training trheads. A list view gives you a list of all 
+						the learning threads in memory. You can view the perceptron in detail view, with a convergence graph refreshing every 5 seconds. Also see
+						a grahpical representation of the perceptron on the details page. Compare all the convergence graphs of the different data sets and more.
+					</p>
+					<p>
+						<img src="images/mlp-dashboard-running-stopped.png" />
+					</p>
 
-<h3>Download source</h3>
-
-<pre><code>
+					<h3>Download source</h3>
+					<pre>
+<code>
 git clone git@github.com:LindesRoets/mlpnn-experiment.git
-</code></pre>
+</code>
+					</pre>
 
-<h3>Compile source code</h3>
-<pre><code>
+					<h3>Compile source code</h3>
+					<pre>
+<code>
 mvn compile
-</code></pre>
+</code>
+					</pre>
 
-<h3>Create java docs</h3>
-<pre><code>
+					<h3>Create java docs</h3>
+					<pre>
+<code>
 mvn javadoc:javadoc
-</code></pre>
+</code>
+					</pre>
 
-<h3>Execute tests</h3>
-<pre><code>
+					<h3>Execute tests</h3>
+					<pre>
+<code>
 mvn test
-</code></pre>
+</code>
+					</pre>
 
-<h3>Dowload and transform data sets in offline mode</h3>
-<pre><code>
+					<h3>Dowload and transform data sets in offline mode</h3>
+					<pre>
+<code>
 mvn test -Dtest=DownloadDataSet
-</code></pre>
+</code>
+					</pre>
 
-<h3>Run application with maven</h3>
-<pre><code>
+					<h3>Run application with maven</h3>
+					<pre>
+<code>
 mvn spring-boot:run
-</code></pre>
+</code>
+					</pre>
 
-<h3>Package application into jar</h3>
-<pre><code>
+					<h3>Package application into jar</h3>
+					<pre>
+<code>
 mvn package
-</code></pre>
+</code>
+					</pre>
 
-<h3>Run application from jar</h3>
-<pre><code>
-java -jar <jar-file-name>.jar
-</code></pre>
+					<h3>Run application from jar</h3>
+					<pre>
+<code>
+java -jar your-jar.jar
+</code>
+					</pre>
 
+					<h3>***Requirements***</h3>
 
-***Requirements***
+					<pre>
+<code>
 java 1.8.0.*
+</code>
+					</pre>
 
-  </section>
-        <aside id="sidebar">
-          <a href="https://github.com/LindesRoets/mlpnn-experiment/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/LindesRoets/mlpnn-experiment/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
+					<p>
+						<img src="images/Iris-mlp-5.png" />
+					</p>
 
-          <p class="repo-owner"><a href="https://github.com/LindesRoets/mlpnn-experiment"></a> is maintained by <a href="https://github.com/LindesRoets">LindesRoets</a>.</p>
+				</section>
+				<aside id="sidebar">
+					<a href="https://github.com/LindesRoets/mlpnn-experiment/zipball/master" class="button">
+						<small>Download</small>
+						.zip file
+					</a>
+					<a href="https://github.com/LindesRoets/mlpnn-experiment/tarball/master" class="button">
+						<small>Download</small>
+						.tar.gz file
+					</a>
 
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
-    </div>
-  </body>
+					<p class="repo-owner"><a href="https://github.com/LindesRoets/mlpnn-experiment"></a> is maintained by <a href="https://github.com/LindesRoets">LindesRoets</a>.</p>
+
+					<p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+
+					<p>
+						<img src="images/mlp-input-close-up.png" />
+					</p>
+
+					<p>
+						<img src="images/mlp-56-input-highlight.png" />
+					</p>
+
+				</aside>
+			</div>
+		</div>
+	</body>
 </html>
