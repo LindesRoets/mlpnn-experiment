@@ -5,13 +5,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
-import net.mlpnn.enums.LearningStatus;
 import net.mlpnn.form.MultilayerPercetpronParametersForm;
 import net.mlpnn.service.MultiLayerPerceptronRunner;
 import net.mlpnn.util.Counting;
 import org.junit.Assert;
 import org.junit.Test;
-import org.neuroph.nnet.learning.BackPropagation;
 
 /**
  *
