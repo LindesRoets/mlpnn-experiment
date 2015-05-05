@@ -23,7 +23,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class DownloadDataSetTest {
+public class DownloadDataSet {
 
     @Autowired
     private DataSetService dataSetService;
