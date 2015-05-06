@@ -13,6 +13,9 @@ $(document).ready(function () {
 	} else if (pageTitle === 'MultiLayer Perceptron Parameters Form'){
 		$('#mlp-create').addClass('active');
         $('#mlp-dashboard-actions').addClass('active');			
+	} else if (pageTitle === 'Download Data Sets') {
+		$('#dataset-menu').addClass('active');
+		$('#dataset-download').addClass('active');
 	}
 
     $('div.has-error input.form-control').on('click', function () {

@@ -31,13 +31,6 @@ public class DataSetService {
 	@Autowired
 	private ApplicationConfiguration config;
 
-	public void downloadDataSets() throws IOException {
-		for (DataSetInfo info : DataSetInfo.values()) {
-			this.downloadDataSet(info);
-		}
-
-	}
-
 	public void downloadDataSet(DataSetInfo info) throws MalformedURLException, IOException {
 		File file = new File(config.getDatasetFilePath() + "/" + info.originalFileName);
 		FileUtils.copyURLToFile(new URL(info.url), file);

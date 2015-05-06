@@ -19,7 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/dataset")
-public class DatasetController extends BaseController{
+public class DatasetController extends BaseController {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(DatasetController.class);
 
@@ -33,7 +33,10 @@ public class DatasetController extends BaseController{
 	public String downloadDataSets(RedirectAttributes redirect) {
 
 		try {
-			dataSetService.downloadDataSets();
+			for (DataSetInfo info : DataSetInfo.values()) {
+				dataSetService.downloadDataSet(info);
+				dataSetService.createTestAndValidationDataForRegressor(info);
+			}
 			redirect.addFlashAttribute("globalNotification", "Successfully downloaded all the datasets!");
 		} catch (IOException io) {
 			LOGGER.error("Download all dataset call from controller failed: " + io.getMessage(), io);
@@ -45,23 +48,25 @@ public class DatasetController extends BaseController{
 	}
 
 	@RequestMapping("/download/{dataSetName}")
-	public String downloadDataSet(@PathVariable("dataSetName") String dataSetName, RedirectAttributes redirect) throws IOException {
-		dataSetService.downloadDataSet(DataSetInfo.valueOf(dataSetName.toUpperCase()));
+	public String downloadDataSet(@PathVariable("dataSetName") String dataSetName, RedirectAttributes redirect) {
 		redirect.addFlashAttribute("globalNotification", "Successfully downloaded " + dataSetName);
+		try {
+
+			dataSetService.downloadDataSet(DataSetInfo.valueOf(dataSetName.toUpperCase()));
+			dataSetService.createTestAndValidationDataForRegressor(DataSetInfo.valueOf(dataSetName.toUpperCase()));
+		} catch (IOException ioe) {
+			LOGGER.error("Downloading data set failed: dataSetName: " + dataSetName, ioe);
+			redirect.addFlashAttribute("globalNotification", "Could not download " + dataSetName + ". The reported problem is: " + ioe.getMessage());
+
+		}
+
 		return "redirect:/dataset/dashboard";
 	}
 
 	@RequestMapping("/dashboard")
-	public String show(Model model) {
+	public String showDashboard(Model model) {
 		model.addAttribute("datasets", DataSetInfo.values());
 		return "dataset-dashboard";
-	}
-
-	@RequestMapping("/refactor/{dataSetName}")
-	public String refactorDataSet(@PathVariable("dataSetName") String dataSetName, RedirectAttributes redirect) throws IOException {
-		dataSetService.preprocessDataSet(DataSetInfo.valueOf(dataSetName.toUpperCase()));
-		redirect.addFlashAttribute("globalNotification", "Successfully refactored " + dataSetName);
-		return "redirect:/dataset/dashboard";
 	}
 
 }
