@@ -4,14 +4,14 @@
       layout:decorator="layout">
 
     <head>
-        <title>MultiLayer Perceptron Parameters Form</title>
+        <title th:text="#{mlp.create.heading}">MultiLayer Perceptron Parameters Form</title>
     </head>
     <body>
         <div layout:fragment="content">
 
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">MultiLayer Perceptron Parameters Form</h1>
+                    <h1 class="page-header" th:text="#{mlp.create.heading}">MultiLayer Perceptron Parameters Form</h1>
                 </div>
             </div>
 
@@ -22,15 +22,28 @@
             </div>
 
             <div class="row">
-                <div class="col-lg-9">
+                <div class="col-lg-12">
                     <form th:object="${mlpForm}" th:action="@{/mlp/train}" method="post" role="form">
                         <div class="show-grid"></div>
                         <div th:replace="fragments :: errors"></div>
                         <div th:replace="fragments :: globalNotification"></div>
+                        <div class="form-group" th:classappend="${#fields.hasErrors('networkName')} ? 'has-error'">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <label for="networkName" class="control-label" th:text="#{mlp.create.network.name}">Test Name:</label>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="text" class="form-control" th:field="*{networkName}" />
+                                </div>
+                                <div class="col-lg-6">
+                                    <p th:if="${#fields.hasErrors('networkName')}" th:errors="*{networkName}" class="help-block"></p>
+                                </div>
+                            </div>
+                        </div>                        
                         <div class="form-group" th:classappend="${#fields.hasErrors('neuronCount')} ? 'has-error'">
                             <div class="row">
                                 <div class="col-lg-2">
-                                    <label for="neuronCount" class="control-label">Neuron Count:</label>
+                                    <label for="neuronCount" class="control-label" th:text="#{mlp.create.hidden.layer.1.neuron.count}">Neuron Count:</label>
                                 </div>
                                 <div class="col-lg-4">
                                     <input type="text" class="form-control" th:field="*{neuronCount}" />
@@ -44,7 +57,7 @@
                         <div class="form-group" th:classappend="${#fields.hasErrors('momentum')} ? 'has-error'">
                             <div class="row">
                                 <div class="col-lg-2">
-                                    <label for="momentum" class="control-label">Momentum:</label>
+                                    <label for="momentum" class="control-label" th:text="#{mlp.create.momentum}">Momentum:</label>
                                 </div>
                                 <div class="col-lg-4">
                                     <input type="text" class="form-control" th:field="*{momentum}" />
@@ -58,7 +71,7 @@
                         <div class="form-group" th:classappend="${#fields.hasErrors('learningRate')} ? 'has-error'">
                             <div class="row">
                                 <div class="col-lg-2">
-                                    <label for="learningRate" class="control-label">Learning Rate:</label>
+                                    <label for="learningRate" class="control-label" th:text="#{mlp.create.learning.rate}">Learning Rate:</label>
                                 </div>
                                 <div class="col-lg-4">
                                     <input type="text" class="form-control" th:field="*{learningRate}" />
@@ -72,10 +85,12 @@
                         <div class="form-group" th:classappend="${#fields.hasErrors('dataSetName')} ? 'has-error'">
                             <div class="row">
                                 <div class="col-lg-2">
-                                    <label for="dataSetName" class="control-label">Data Set:</label>
+                                    <label for="dataSetName" class="control-label" th:text="#{mlp.create.data.set}">Data Set:</label>
                                 </div>
                                 <div class="col-lg-4">
-                                    <input type="text" class="form-control" th:field="*{dataSetName}" />
+                                    <select class="form-control" th:field="*{dataSetName}" autofocus="autofocus">
+                                        <option th:each="dataset : ${datasets}" th:value="${dataset.name()}" th:text="#{'data.set.name.'+ ${dataset.name()}}">Select Option</option>
+                                    </select>
                                 </div>
                                 <div class="col-lg-6">
                                     <p th:if="${#fields.hasErrors('dataSetName')}" th:errors="*{dataSetName}" class="help-block"></p>
@@ -87,15 +102,13 @@
                             <div class="row">
                                 <div class="col-lg-2"></div> 
                                 <div class="col-lg-4">
-                                    <input class="btn btn-primary" type="submit" value="Train" />
+                                    <button id="mlpCreateSubmit" class="btn btn-primary" type="submit" th:text="#{mlp.create.submit}">Train</button>
                                 </div> 
                             </div> 
                         </div>								
                     </form>
-
                 </div>
             </div>            
-
         </div>
     </body>
 </html>

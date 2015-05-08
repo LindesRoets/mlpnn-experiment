@@ -1,56 +1,83 @@
 package net.mlpnn.form;
 
+import java.io.Serializable;
 import javax.validation.constraints.NotNull;
+import net.mlpnn.enums.DataSetInfo;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *
+ * The form captures all the inputs from the client to initialize training of a
+ * {@link org.neuroph.nnet.MultiLayerPerceptron}
+ *
  * @author Lindes Roets
  */
-public class MultilayerPercetpronParametersForm {
+public class MultilayerPercetpronParametersForm implements Serializable {
 
-    @NotNull
-    private Integer neuronCount;
+	private static final long serialVersionUID = -5129638297481151445L;
 
-    @NotNull
-    private Double momentum;
+	/**
+	 * Used for display in interface. The name of a specific {@link net.mlpnn.service.MultiLayerPerceptronRunner}
+	 */
+	@NotEmpty
+	private String networkName;
 
-    @NotNull
-    private Double learningRate;
+	/**
+	 * Defines the number of neurons for the hidden layer
+	 */
+	@NotNull
+	private Integer neuronCount;
 
-    @NotEmpty
-    private String dataSetName;
+	@NotNull
+	private Double momentum;
 
-    public Integer getNeuronCount() {
-        return neuronCount;
-    }
+	@NotNull
+	private Double learningRate;
 
-    public void setNeuronCount(int neuronCount) {
-        this.neuronCount = neuronCount;
-    }
+	/**
+	 * This is the name of the data set that will be used to instantiate the {@link DataSetInfo}
+	 */
+	@NotEmpty
+	private String dataSetName;
 
-    public Double getMomentum() {
-        return momentum;
-    }
+	public Integer getNeuronCount() {
+		return neuronCount;
+	}
 
-    public void setMomentum(double momentum) {
-        this.momentum = momentum;
-    }
+	public void setNeuronCount(int neuronCount) {
+		this.neuronCount = neuronCount;
+	}
 
-    public Double getLearningRate() {
-        return learningRate;
-    }
+	public Double getMomentum() {
+		return momentum;
+	}
 
-    public void setLearningRate(double learningRate) {
-        this.learningRate = learningRate;
-    }
+	public void setMomentum(double momentum) {
+		this.momentum = momentum;
+	}
 
-    public String getDataSetName() {
-        return dataSetName;
-    }
+	public Double getLearningRate() {
+		return learningRate;
+	}
 
-    public void setDataSetName(String dataSetName) {
-        this.dataSetName = dataSetName;
-    }
+	public void setLearningRate(double learningRate) {
+		this.learningRate = learningRate;
+	}
+
+	public String getDataSetName() {
+		return dataSetName;
+	}
+
+	public void setDataSetName(String dataSetName) {
+		this.dataSetName = dataSetName;
+	}
+
+	public String getNetworkName() {
+		return networkName;
+	}
+
+	public void setNetworkName(String networkName) {
+		this.networkName = networkName;
+	}
 
 }

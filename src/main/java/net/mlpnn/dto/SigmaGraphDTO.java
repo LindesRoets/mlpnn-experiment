@@ -1,5 +1,7 @@
 package net.mlpnn.dto;
 
+import net.mlpnn.rep.Node;
+import net.mlpnn.rep.Edge;
 import java.util.List;
 
 /**

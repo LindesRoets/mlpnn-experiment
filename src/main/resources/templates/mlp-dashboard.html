@@ -10,7 +10,7 @@
         <div layout:fragment="content">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">MultiLayer Perceptrons in Training</h1>
+                    <h1 class="page-header">MultiLayer Perceptrons Dashboard</h1>
                 </div>
             </div>
             <div class="row">
@@ -19,25 +19,93 @@
                 </div>              
             </div>
             <div class="row">                
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <p th:if="${#lists.isEmpty(mlpIds)}">There are no perceptrons training right now.</p>
-                        <p th:each="mlpId : ${mlpIds}"> 
-                            <span th:text="#{'mlp'} + ' - '">Perceptron 1</span><a th:href="@{'/mlp/view/'+ ${mlpId}}" th:text="${mlpId}"></a>
-                        </p>
-                    </div>						
+                <div class="col-lg-4 col-md-6">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+							<div class="row">
+								<div class="col-xs-3">
+									<i class="fa fa-play fa-5x"></i>
+								</div>
+								<div class="col-xs-9 text-right">
+									<div id="runningThreadCount" class="huge"></div>
+									<div>Running</div>
+								</div>
+							</div>
+						</div>
+						<div class="panel-body">						
+						</div>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <hr/>
+				<div class="col-lg-4 col-md-6">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+							<div class="row">
+								<div class="col-xs-3">
+									<i class="fa fa-pause fa-5x"></i>
+								</div>
+								<div class="col-xs-9 text-right">
+									<div id="pausedThreadCount" class="huge"></div>
+									<div>Paused</div>
+								</div>
+							</div>
+						</div>
+						<div class="panel-body">						
+						</div>
+                    </div>
                 </div>
-            </div>            
-            <div class="row">
-                <div class="col-lg-4">
-                    <a th:href="@{'/mlp/create'}" class="btn btn-primary form-control"><i class="fa fa-plus-square pull-left"></i>Create new MultiLayer Perceptron</a>
+				<div class="col-lg-4 col-md-6">
+                    <div class="panel panel-red">
+                        <div class="panel-heading">
+							<div class="row">
+								<div class="col-xs-3">
+									<i class="fa fa-stop fa-5x"></i>
+								</div>
+								<div class="col-xs-9 text-right">
+									<div id="stoppedThreadCount" class="huge"></div>
+									<div>Stopped</div>
+								</div>
+							</div>
+						</div>
+						<div class="panel-body">						
+						</div>
+                    </div>
                 </div>
-            </div>            
+
+            </div>                       
+        </div>
+        <div layout:fragment="custom-js">
+            <script th:inline="javascript">
+
+				$(document).ready(function () {
+
+					function fetchData() {
+						function onDataReceived(dashBoardDTO) {
+							$("#runningThreadCount").hide();
+							$("#pausedThreadCount").hide();
+							$("#stoppedThreadCount").hide();
+							$("#runningThreadCount").html(dashBoardDTO.runningThreadCount);
+							$("#pausedThreadCount").html(dashBoardDTO.pausedThreadCount);
+							$("#stoppedThreadCount").html(dashBoardDTO.stoppedThreadCount);
+							$("#runningThreadCount").fadeIn(1000);
+							$("#pausedThreadCount").fadeIn(1000);
+							$("#stoppedThreadCount").fadeIn(1000);
+							
+							setTimeout(fetchData, 5000);
+						}
+						$.ajax({
+							url: "/mlp/dashboard/info",
+							type: "GET",
+							dataType: "json",
+							success: onDataReceived
+							//failure:
+						});
+					}
+					fetchData();
+
+				});
+
+            </script>
+
         </div>
     </body>
 </html>

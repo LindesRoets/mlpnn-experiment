@@ -1,4 +1,4 @@
-package net.mlpnn.dto;
+package net.mlpnn.rep;
 
 /**
  *

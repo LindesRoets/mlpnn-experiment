@@ -7,8 +7,11 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{'/css/bootstrap.min.css'}"/>
+        <link rel="stylesheet" href="../static/css/plugins/dataTables.bootstrap.css" th:href="@{'/css/plugins/dataTables.bootstrap.css'}"/>
+        <link rel="stylesheet" href="../static/css/plugins/dataTables.responsive.css" th:href="@{'/css/plugins/dataTables.responsive.css'}"/>
         <link rel="stylesheet" href="../static/css/plugins/metisMenu/metisMenu.min.css" th:href="@{'/css/plugins/metisMenu/metisMenu.min.css'}" />
         <link rel="stylesheet" href="../static/css/sb-admin-2.css" th:href="@{'/css/sb-admin-2.css'}" />
+		<link rel="stylesheet" href="../static/css/main.css" th:href="@{'/css/main.css'}" />
         <link rel="stylesheet" href="../static/font-awesome-4.1.0/css/font-awesome.min.css" th:href="@{'/font-awesome-4.1.0/css/font-awesome.min.css'}" type="text/css" />
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -24,19 +27,67 @@
             <!-- Navigation -->
             <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
                 <div class="navbar-header navbar-right">
-                    <!--                    <h3>Multilayer Perceptron Experiment</h3>-->
                 </div>
                 <!-- /.navbar-header -->
 
                 <div class="navbar-default sidebar" role="navigation">
                     <div class="sidebar-nav navbar-collapse">
                         <ul class="nav" id="side-menu">
-                            <li>
-                                <a id="mlp-dashboard" th:href="@{'/mlp/dashboard'}"><i class="fa fa-dashboard fa-fw"></i> Multilayer Perceptron</a>
+                            <li id="mlp-dashboard-actions">
+                                <a href="#"><i class="fa fa-certificate fa-fw"></i> Multilayer Perceptron <span class="fa arrow"></span></a>
+								<ul class="nav nav-second-level">
+									<li>
+										<a id="mlp-dashboard" th:href="@{'/mlp/dashboard'}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+									</li>
+									<li>
+										<a id="mlp-create" th:href="@{'/mlp/create'}"><i class="fa fa-plus fa-fw"></i> Create</a>
+									</li>
+									<li>
+										<a id="mlp-list" th:href="@{'/mlp/list'}"><i class="fa fa-list fa-fw"></i> List</a>
+									</li>
+								</ul>
                             </li>
-                            <li>
-                                <a id="dataset-dashboard" th:href="@{'/dataset/dashboard'}"><i class="fa fa-database fa-fw"></i> Dataset</a>
-                            </li>							
+							<li id="mlp-actions">
+								<a href="#"><i class="fa fa-android fa-fw"></i> Repository <span class="fa arrow"></span></a>
+								<ul class="nav nav-second-level">
+									<li>
+										<a href="#"><i class="fa fa-database fa-fw"></i> Retrieve</a>
+										<ul class="nav nav-third-level">
+											<li>
+												<a id="mlp-retrieve-all" th:href="@{'/mlp/retrieve/all'}"><i class="fa fa-database fa-fw"></i> All</a>
+											</li>
+											<li th:each="dataset : ${datasets}" th:with="dataSetName=#{'data.set.name.'+${dataset.name()}}">
+												<a th:attr="id='mlp-retrieve-'+${dataset}" th:href="@{'/mlp/retrieve/'+${dataset}}" th:text="'Retrieve '+${dataSetName}"><i class="fa fa-save fa-fw"></i> Retrieve DataSet</a>
+											</li>
+										</ul>
+									</li>
+									<li>
+										<a href="#"><i class="fa fa-save fa-fw"></i> Save</a>
+										<ul class="nav nav-third-level">
+											<li>
+												<a id="mlp-save-all" th:href="@{'/mlp/save/all'}"><i class="fa fa-save fa-fw"></i> All</a>
+											</li>
+											<li th:each="dataset : ${datasets}" th:with="dataSetName=#{'data.set.name.'+${dataset.name()}}">
+												<a th:attr="id='mlp-save-'+${dataset}" th:href="@{'/mlp/save/'+${dataset}}" th:text="'Save '+${dataSetName}"><i class="fa fa-save fa-fw"></i> Save DataSet</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+							<li id="dataset-menu">
+								<a id="dataset-download" th:href="@{'/dataset/dashboard'}"><i class="fa fa-database fa-fw"></i> Download Data Sets</a>
+							</li>	
+							<li id="graph-menu">
+								<a id="graph-menu-heading" href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Graphs <span class="fa arrow"></span></a>
+								<ul class="nav nav-second-level">
+									<li>
+										<a id="graph-all" th:href="@{'/mlp/graph/all'}"><i class="fa fa-database fa-fw"></i> Graph All</a>
+									</li>
+									<li th:each="dataset : ${datasets}" th:with="dataSetName=#{'data.set.name.'+${dataset.name()}}">
+										<a th:attr="id='mlp-graph-'+${dataset}" th:href="@{'/mlp/graph/group/'+${dataset}}" th:text="'Convergence '+${dataSetName}" ><i class="fa fa-save fa-fw"></i> Retrieve DataSet</a>
+									</li>
+								</ul>
+							</li>							
                         </ul>
                     </div>
                     <!-- /.sidebar-collapse -->
@@ -67,5 +118,16 @@
         <script src="../static/js/main.js" th:src="@{'/js/main.js'}"></script>
         <script src="../static/js/plugins/metisMenu/metisMenu.min.js" th:src="@{'/js/plugins/metisMenu/metisMenu.js'}"></script>
         <script src="../static/js/sb-admin-2.js" th:src="@{'/js/sb-admin-2.js'}"></script>
+        <script src="../static/js/sigma/sigma.min.js" th:src="@{'/js/sigma/sigma.min.js'}"></script>
+        <script src="../static/js/sigma/plugins/sigma.parsers.json.min.js" th:src="@{'/js/sigma/plugins/sigma.parsers.json.min.js'}"></script> 
+        <script src="../static/js/plugins/flot/jquery.flot.js" th:src="@{'/js/plugins/flot/jquery.flot.js'}"></script>
+        <script src="../static/js/plugins/flot/jquery.flot.resize.js" th:src="@{'/js/plugins/flot/jquery.flot.resize.js'}"></script>
+        <!-- DataTables JavaScript -->
+        <script src="../static/js/plugins/dataTables/jquery.dataTables.js" th:src="@{'/js/plugins/dataTables/jquery.dataTables.js'}"></script>
+        <script src="../static/js/plugins/dataTables/dataTables.bootstrap.js" th:src="@{'/js/plugins/dataTables/dataTables.bootstrap.js'}"></script>
+
+        <!-- This line must stay last -->
+        <section layout:fragment="custom-js" th:remove="tag"></section>
+
     </body>
 </html>

@@ -1,11 +1,14 @@
 <div th:fragment="errors">
-	<div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+	<div th:if="${#fields.hasErrors('*')}" class="alert alert-danger not-so-huge">
 		There were problems with some of the form fields below.
 	</div>
 </div>
 
 <div th:fragment="globalNotification">
-	<div th:if="${globalNotification != null}" class="alert alert-success" th:text="${globalNotification}">
+	<div th:if="${globalNotification != null}" class="alert alert-success not-so-huge" th:text="${globalNotification}">
+
+	</div>
+	<div th:if="${globalWarning != null}" class="alert alert-warning not-so-huge" th:text="${globalWarning}">
 
 	</div>
 </div>

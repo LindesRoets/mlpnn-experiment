@@ -4,103 +4,13 @@
       layout:decorator="layout">
 
     <head>         
-        <style type="text/css">
-            #container {
-                max-width: 1000px;
-                height: 500px;
-                margin: auto;
-            }
-        </style>
-        <script src="../static/js/sigma/sigma.min.js" th:src="@{'/js/sigma/sigma.min.js'}"></script>
-        <script src="../static/js/sigma/plugins/sigma.parsers.json.min.js" th:src="@{'/js/sigma/plugins/sigma.parsers.json.min.js'}"></script>  
-        <script th:inline="javascript">
-            /*<![CDATA[*/
-            // Add a method to the graph model that returns an
-            // object with every neighbors of a node inside:
-            sigma.classes.graph.addMethod('neighbors', function (nodeId) {
-                var k,
-                        neighbors = {},
-                        index = this.allNeighborsIndex[nodeId] || {};
-
-                for (k in index)
-                    neighbors[k] = this.nodesIndex[k];
-
-                return neighbors;
-            });
-            var mlpId = /*[[${mlpId}]]*/'1';
-            sigma.parsers.json('/mlp/topology/' + mlpId, {
-                container: 'container',
-                settings: {
-                    defaultNodeColor: '#ec5148'
-                }},
-            function (s) {
-                // We first need to save the original colors of our
-                // nodes and edges, like this:
-                s.graph.nodes().forEach(function (n) {
-                    n.originalColor = n.color;
-                });
-                s.graph.edges().forEach(function (e) {
-                    e.originalColor = e.color;
-                });
-
-                // When a node is clicked, we check for each node
-                // if it is a neighbor of the clicked one. If not,
-                // we set its color as grey, and else, it takes its
-                // original color.
-                // We do the same for the edges, and we only keep
-                // edges that have both extremities colored.
-                s.bind('clickNode', function (e) {
-                    var nodeId = e.data.node.id,
-                            toKeep = s.graph.neighbors(nodeId);
-                    toKeep[nodeId] = e.data.node;
-
-                    s.graph.nodes().forEach(function (n) {
-                        if (toKeep[n.id])
-                            n.color = n.originalColor;
-                        else
-                            n.color = '#eee';
-                    });
-
-                    s.graph.edges().forEach(function (e) {
-                        if (toKeep[e.source] && toKeep[e.target])
-                            e.color = e.originalColor;
-                        else
-                            e.color = '#eee';
-                    });
-
-                    // Since the data has been modified, we need to
-                    // call the refresh method to make the colors
-                    // update effective.
-                    s.refresh();
-                });
-
-                // When the stage is clicked, we just color each
-                // node and edge with its original color.
-                s.bind('clickStage', function (e) {
-                    s.graph.nodes().forEach(function (n) {
-                        n.color = n.originalColor;
-                    });
-
-                    s.graph.edges().forEach(function (e) {
-                        e.color = e.originalColor;
-                    });
-
-                    // Same as in the previous event:
-                    s.refresh();
-                });
-            }
-            );
-
-            /*]]>*/
-        </script>
-
-        <title>MultiLayer Perceptron</title>
+        <title th:text="#{mlp}">MultiLayer Perceptron</title>
     </head>
     <body>
         <div layout:fragment="content">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">MultiLayer Perceptron</h1>
+                    <h2 class="page-header" th:text="${runner.form.networkName}">MultiLayer Perceptron</h2>
                 </div>
             </div>
             <div class="row">
@@ -110,36 +20,254 @@
             </div>
             <div class="row">
                 <div class="col-lg-6">
-                    <div class="form-group">
-                        <p th:text="${'Current iteration: ' + runner.perceptron.getLearningRule().getCurrentIteration()}"></p>
-                        <p th:text="${'Input size: ' + runner.perceptron.getLearningRule().getTrainingSet().getInputSize()}"></p>
-                        <p th:text="${'Hidden layer size: ' + runner.form.neuronCount}" ></p>
-                        <p th:text="${'Output size: ' + runner.perceptron.getLearningRule().getTrainingSet().getOutputSize()}"></p>
-                        <p th:text="${'Learning status: ' + runner.calculateLearningStatus()}"></p>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading not-so-huge" th:text="#{mlp.view.network.controls}">Controls</div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="top-buffer bottom-buffer" th:if="${runner.calculateLearningStatus().name() == 'RUNNING' || runner.calculateLearningStatus().name() == 'STOPPED' }" >
+                                        <a th:href="@{'/mlp/' + ${mlpId} + '/resume'}" >
+                                            <button class="btn btn-success btn-circle btn-xl disabled center-block"><i class="fa fa-play"></i></button>
+                                        </a>                                   
+                                    </div>
+                                    <div class="top-buffer bottom-buffer" th:if="${runner.calculateLearningStatus().name() == 'PAUSED' }">
+                                        <a th:href="@{'/mlp/' + ${mlpId} + '/resume'}" >
+                                            <button class="btn btn-success btn-circle btn-xl center-block"><i class="fa fa-play"></i></button>
+                                        </a>
+                                    </div>                                  
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="top-buffer bottom-buffer" th:if="${runner.calculateLearningStatus().name() == 'RUNNING'}" >
+                                        <a th:href="@{'/mlp/' + ${mlpId} + '/pause'}" >
+                                            <button class="btn btn-warning btn-circle btn-xl center-block"><i class="fa fa-pause"></i></button>
+                                        </a>            
+                                    </div>
+                                    <div class="top-buffer bottom-buffer" th:if="${runner.calculateLearningStatus().name() == 'PAUSED' || runner.calculateLearningStatus().name() == 'STOPPED'}" >
+                                        <a th:href="@{'/mlp/' + ${mlpId} + '/pause'}" >
+                                            <button class="btn btn-warning btn-circle btn-xl disabled center-block"><i class="fa fa-pause"></i></button>
+                                        </a>            
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="top-buffer bottom-buffer" th:if="${runner.calculateLearningStatus().name() == 'RUNNING' || runner.calculateLearningStatus().name() == 'PAUSED' }" >
+                                        <a th:href="@{'/mlp/' + ${mlpId} + '/stop'}" >
+                                            <button class="btn btn-danger btn-circle btn-xl center-block"><i class="fa fa-stop"></i></button>
+                                        </a>                                       
+                                    </div>
+                                    <div class="top-buffer bottom-buffer" th:if="${runner.calculateLearningStatus().name() == 'STOPPED'}" >
+                                        <a th:href="@{'/mlp/' + ${mlpId} + '/stop'}" >
+                                            <button class="btn btn-danger btn-circle btn-xl disabled center-block"><i class="fa fa-stop"></i></button>
+                                        </a>                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="panel panel-success">
+                        <div class="panel-heading not-so-huge" th:text="#{mlp.view.network.details}">Network details and status</div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-9"  th:with="dataSetName=#{'data.set.name.'+${runner.form.dataSetName}}">
+                                    <p th:text="${'Learning Status: ' + runner.calculateLearningStatus()}"></p> 
+                                    <p th:text="${'Current Iteration: ' + runner.perceptron.getLearningRule().getCurrentIteration()}"></p>
+                                    <p th:text="${'Input Size: ' + runner.perceptron.getLearningRule().getTrainingSet().getInputSize()}"></p>
+                                    <p th:text="${'Hidden Layer size: ' + runner.form.neuronCount}" ></p>
+                                    <p th:text="${'Output Size: ' + runner.perceptron.getLearningRule().getTrainingSet().getOutputSize()}"></p>
+                                    <p th:text="${'Learning Rate: ' + runner.form.learningRate}"></p> 
+                                    <p th:text="${'Momentum: ' + runner.form.momentum}"></p> 
+                                    <p th:text="#{data.set(${dataSetName})}"></p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div class="form-group">
-                        <p th:if="${#lists.isEmpty(runner.totalNetworkErrors)}">There are no network errors.</p>
-                        <p th:each="error : ${runner.totalNetworkErrors}" th:text="${'Error - ' + error}">Perceptron 1</p>
-                    </div>						
+					<div class="row" th:with="dataSetName=#{'data.set.name.'+${runner.form.dataSetName}}">
+						<div class="col-lg-6">
+							<div class="panel panel-green">
+								<div class="panel-heading not-so-huge">
+									<div class="row">
+										<div class="col-xs-3">
+											<i class="fa fa-bar-chart-o fa-5x"></i>
+										</div>
+										<div class="col-xs-9 text-right">
+											<div class="huge"></div>
+										</div>
+									</div>
+								</div>
+								<div class="panel-body">
+									<a th:href="@{'/mlp/graph/group/' + ${runner.form.dataSetName}}" th:text="#{graph.view.group(${dataSetName})}">View all graphs errors</a>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="panel panel-green">
+								<div class="panel-heading not-so-huge">
+									<div class="row">
+										<div class="col-xs-3">
+											<i class="fa fa-bar-chart-o fa-5x"></i>
+										</div>
+										<div class="col-xs-9 text-right">
+											<div class="huge">Global</div>
+										</div>
+									</div>
+								</div>
+								<div class="panel-body">
+									<a th:href="@{'/mlp/graph/all'}">Compare convergence against other data sets.</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="panel panel-success">
+								<div class="panel-heading not-so-huge" th:text="#{mlp.view.network.error.graph}">Net Error Graph</div>
+								<div class="panel-body">
+									<!-- Chart initialized on element netErrorGraphPlaceholder-->
+									<div id="netErrorGraphPlaceholder"></div>                       
+								</div>
+							</div>						
+						</div>
+					</div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-12">
-                    <hr/>
-                </div>
-            </div>            
-            <div class="row">
-                <div class="col-lg-4">
-                    <a th:href="@{'/mlp/create'}" class="btn btn-primary form-control"><i class="fa fa-plus-square pull-left"></i>Create new MultiLayer Perceptron</a>
-                </div>
-            </div>  
+
+                </div>                
+            </div>
             <div class="row">
                 <div class="col-lg-12">
-                    <div id="container"></div>
+                    <div class="panel panel-green">
+                        <div class="panel-heading not-so-huge" th:text="#{mlp.view.network.representation}">Network Representation</div>
+                        <div class="panel-body">
+                            <div id="container"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+        <div layout:fragment="custom-js">
+            <script th:inline="javascript">
+				/*<![CDATA[*/
+				//examples taken and inspired from https://github.com/flot/flot/tree/master/examples
+				//Some changes were made to the original examples to fit this scenario
+
+				$(document).ready(function () {
+
+					$(function () {
+
+						var data = [];
+						var alreadyFetched = {};
+						var mlpId = /*[[${mlpId}]]*/'1';
+						var learningStatus = /*[[${runner.calculateLearningStatus().name()}]]*/'RUNNING';
+						$.plot("#netErrorGraphPlaceholder", data);
+
+						function fetchData() {
+
+							function onDataReceived(series) {
+								// Load all the data in one pass; if we only got partial
+								// data we could merge it with what we already have.
+								data = [series];
+								$.plot("#netErrorGraphPlaceholder", data);
+								setTimeout(fetchData, 5000);
+							}
+
+							$.ajax({
+								url: "/mlp/" + mlpId + "/graph",
+								type: "GET",
+								dataType: "json",
+								success: onDataReceived,
+								fail: setTimeout(fetchData, 5000)
+							});
+
+						}
+
+						setTimeout(fetchData, 500);
+
+					});
+
+
+					// Add a method to the graph model that returns an
+					// object with every neighbors of a node inside:
+					sigma.classes.graph.addMethod('neighbors', function (nodeId) {
+						var k,
+								neighbors = {},
+								index = this.allNeighborsIndex[nodeId] || {};
+
+						for (k in index)
+							neighbors[k] = this.nodesIndex[k];
+
+						return neighbors;
+					});
+					var mlpId = /*[[${mlpId}]]*/'1';
+					sigma.parsers.json('/mlp/' + mlpId + '/topology', {
+						container: 'container',
+						settings: {
+							defaultNodeColor: '#d9534f'
+						}},
+					function (s) {
+						// We first need to save the original colors of our
+						// nodes and edges, like this:
+						s.graph.nodes().forEach(function (n) {
+							n.originalColor = n.color;
+						});
+						s.graph.edges().forEach(function (e) {
+							e.originalColor = e.color;
+						});
+
+						// When a node is clicked, we check for each node
+						// if it is a neighbor of the clicked one. If not,
+						// we set its color as grey, and else, it takes its
+						// original color.
+						// We do the same for the edges, and we only keep
+						// edges that have both extremities colored.
+						s.bind('clickNode', function (e) {
+							var nodeId = e.data.node.id,
+									toKeep = s.graph.neighbors(nodeId);
+							toKeep[nodeId] = e.data.node;
+
+							s.graph.nodes().forEach(function (n) {
+								if (toKeep[n.id])
+									n.color = n.originalColor;
+								else
+									n.color = '#eee';
+							});
+
+							s.graph.edges().forEach(function (e) {
+								if (toKeep[e.source] && toKeep[e.target])
+									e.color = e.originalColor;
+								else
+									e.color = '#eee';
+							});
+
+							// Since the data has been modified, we need to
+							// call the refresh method to make the colors
+							// update effective.
+							s.refresh();
+						});
+
+						// When the stage is clicked, we just color each
+						// node and edge with its original color.
+						s.bind('clickStage', function (e) {
+							s.graph.nodes().forEach(function (n) {
+								n.color = n.originalColor;
+							});
+
+							s.graph.edges().forEach(function (e) {
+								e.color = e.originalColor;
+							});
+
+							// Same as in the previous event:
+							s.refresh();
+						});
+					}
+					);
+
+				});
+
+				/*]]>*/
+            </script>
         </div>
     </body>
 </html>
