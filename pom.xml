@@ -9,6 +9,7 @@
 	<artifactId>mlpnn-experiment</artifactId>
 	<name>mlpnn</name>
 	<description></description>
+	<version>1.0.0</verion>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<start-class>net.mlpnn.Application</start-class>
