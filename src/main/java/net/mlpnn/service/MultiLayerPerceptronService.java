@@ -74,6 +74,7 @@ public class MultiLayerPerceptronService {
 		Thread thread = new Thread(runner);
 		thread.start();
 		String id = UUID.randomUUID().toString();
+		runner.setId(id);
 		getMultiLayerPerceptronRunners().put(id, runner);
 		return id;
 	}
@@ -210,7 +211,8 @@ public class MultiLayerPerceptronService {
 
 	/**
 	 * 
-	 * @param dataSetInfo - The {@link DataSetInfo} by which to filter the runners in memory.
+	 * @param dataSetInfo - The {@link DataSetInfo} by which to filter the runners in memory. The runners are 
+	 * sorted by neuron count
 	 * @return The list of {@link MultiLayerPerceptronRunner} of filtered runners.
 	 */
 	public List<MultiLayerPerceptronRunner> getRunners(DataSetInfo dataSetInfo) {

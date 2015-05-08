@@ -43,6 +43,8 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 	private MultilayerPercetpronParametersForm form;
 
 	private static final long serialVersionUID = 3075382090934381294L;
+	
+	private String id;
 
 	public MultiLayerPerceptronRunner(ApplicationConfiguration config, MultilayerPercetpronParametersForm form) {
 		this.config = config; //TODO: implement a way to refresh the config - this will be needed after deserialization
@@ -312,6 +314,20 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 
 	public void setLearningStatus(LearningStatus learningStatus) {
 		this.learningStatus = learningStatus;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

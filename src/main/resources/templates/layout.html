@@ -56,8 +56,8 @@
 											<li>
 												<a id="mlp-retrieve-all" th:href="@{'/mlp/retrieve/all'}"><i class="fa fa-database fa-fw"></i> All</a>
 											</li>
-											<li th:each="dataset : ${datasets}">
-												<a th:attr="id='mlp-retrieve-'+${dataset}" th:href="@{'/mlp/retrieve/'+${dataset}}" th:text="'Retrieve '+${dataset.name()}"><i class="fa fa-save fa-fw"></i> Retrieve DataSet</a>
+											<li th:each="dataset : ${datasets}" th:with="dataSetName=#{'data.set.name.'+${dataset.name()}}">
+												<a th:attr="id='mlp-retrieve-'+${dataset}" th:href="@{'/mlp/retrieve/'+${dataset}}" th:text="'Retrieve '+${dataSetName}"><i class="fa fa-save fa-fw"></i> Retrieve DataSet</a>
 											</li>
 										</ul>
 									</li>
@@ -67,8 +67,8 @@
 											<li>
 												<a id="mlp-save-all" th:href="@{'/mlp/save/all'}"><i class="fa fa-save fa-fw"></i> All</a>
 											</li>
-											<li th:each="dataset : ${datasets}">
-												<a th:attr="id='mlp-save-'+${dataset}" th:href="@{'/mlp/save/'+${dataset}}" th:text="'Save '+${dataset.name()}"><i class="fa fa-save fa-fw"></i> Save DataSet</a>
+											<li th:each="dataset : ${datasets}" th:with="dataSetName=#{'data.set.name.'+${dataset.name()}}">
+												<a th:attr="id='mlp-save-'+${dataset}" th:href="@{'/mlp/save/'+${dataset}}" th:text="'Save '+${dataSetName}"><i class="fa fa-save fa-fw"></i> Save DataSet</a>
 											</li>
 										</ul>
 									</li>
@@ -78,10 +78,13 @@
 								<a id="dataset-download" th:href="@{'/dataset/dashboard'}"><i class="fa fa-database fa-fw"></i> Download Data Sets</a>
 							</li>	
 							<li id="graph-menu">
-								<a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Graphs</a>
+								<a id="graph-menu-heading" href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Graphs <span class="fa arrow"></span></a>
 								<ul class="nav nav-second-level">
 									<li>
 										<a id="graph-all" th:href="@{'/mlp/graph/all'}"><i class="fa fa-database fa-fw"></i> Graph All</a>
+									</li>
+									<li th:each="dataset : ${datasets}" th:with="dataSetName=#{'data.set.name.'+${dataset.name()}}">
+										<a th:attr="id='mlp-graph-'+${dataset}" th:href="@{'/mlp/graph/group/'+${dataset}}" th:text="'Convergence '+${dataSetName}" ><i class="fa fa-save fa-fw"></i> Retrieve DataSet</a>
 									</li>
 								</ul>
 							</li>							

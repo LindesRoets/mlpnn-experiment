@@ -3,6 +3,7 @@ package net.mlpnn.controller;
 import java.io.IOException;
 import net.mlpnn.enums.DataSetInfo;
 import net.mlpnn.service.DataSetService;
+import net.mlpnn.service.I18NService;
 import net.mlpnn.service.MultiLayerPerceptronService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,9 @@ public class DatasetController extends BaseController {
 	@Autowired
 	public DataSetService dataSetService;
 
+	@Autowired
+	I18NService i18n;
+
 	@RequestMapping("/download/all")
 	public String downloadDataSets(RedirectAttributes redirect) {
 
@@ -49,14 +53,14 @@ public class DatasetController extends BaseController {
 
 	@RequestMapping("/download/{dataSetName}")
 	public String downloadDataSet(@PathVariable("dataSetName") String dataSetName, RedirectAttributes redirect) {
-		redirect.addFlashAttribute("globalNotification", "Successfully downloaded " + dataSetName);
+		redirect.addFlashAttribute("globalNotification", "Successfully downloaded "  + i18n.getMessage("data.set.name." +dataSetName));
 		try {
 
 			dataSetService.downloadDataSet(DataSetInfo.valueOf(dataSetName.toUpperCase()));
 			dataSetService.createTestAndValidationDataForRegressor(DataSetInfo.valueOf(dataSetName.toUpperCase()));
 		} catch (IOException ioe) {
 			LOGGER.error("Downloading data set failed: dataSetName: " + dataSetName, ioe);
-			redirect.addFlashAttribute("globalNotification", "Could not download " + dataSetName + ". The reported problem is: " + ioe.getMessage());
+			redirect.addFlashAttribute("globalNotification", "Could not download " + i18n.getMessage("data.set.name." +dataSetName) + ". The reported problem is: " + ioe.getMessage());
 
 		}
 

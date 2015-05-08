@@ -4,24 +4,6 @@
       layout:decorator="layout">
 
     <head>         
-        <style type="text/css">
-            #container {
-                max-width: 1000px;
-                height: 500px;
-                margin: auto;
-            }
-
-            #netErrorGraphPlaceholder{
-                width: 100%;
-                height: 400px;
-            }
-
-            p {
-                font-size: 14px;
-            }
-
-        </style>
-
         <title th:text="#{mlp}">MultiLayer Perceptron</title>
     </head>
     <body>
@@ -39,40 +21,40 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="panel panel-primary">
-                        <div class="panel-heading" th:text="#{mlp.view.network.controls}">Controls</div>
+                        <div class="panel-heading not-so-huge" th:text="#{mlp.view.network.controls}">Controls</div>
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-lg-4">
-                                    <div th:if="${runner.calculateLearningStatus().name() == 'RUNNING' || runner.calculateLearningStatus().name() == 'STOPPED' }" >
+                                    <div class="top-buffer bottom-buffer" th:if="${runner.calculateLearningStatus().name() == 'RUNNING' || runner.calculateLearningStatus().name() == 'STOPPED' }" >
                                         <a th:href="@{'/mlp/' + ${mlpId} + '/resume'}" >
                                             <button class="btn btn-success btn-circle btn-xl disabled center-block"><i class="fa fa-play"></i></button>
                                         </a>                                   
                                     </div>
-                                    <div th:if="${runner.calculateLearningStatus().name() == 'PAUSED' }">
+                                    <div class="top-buffer bottom-buffer" th:if="${runner.calculateLearningStatus().name() == 'PAUSED' }">
                                         <a th:href="@{'/mlp/' + ${mlpId} + '/resume'}" >
                                             <button class="btn btn-success btn-circle btn-xl center-block"><i class="fa fa-play"></i></button>
                                         </a>
                                     </div>                                  
                                 </div>
                                 <div class="col-lg-4">
-                                    <div th:if="${runner.calculateLearningStatus().name() == 'RUNNING'}" >
+                                    <div class="top-buffer bottom-buffer" th:if="${runner.calculateLearningStatus().name() == 'RUNNING'}" >
                                         <a th:href="@{'/mlp/' + ${mlpId} + '/pause'}" >
                                             <button class="btn btn-warning btn-circle btn-xl center-block"><i class="fa fa-pause"></i></button>
                                         </a>            
                                     </div>
-                                    <div th:if="${runner.calculateLearningStatus().name() == 'PAUSED' || runner.calculateLearningStatus().name() == 'STOPPED'}" >
+                                    <div class="top-buffer bottom-buffer" th:if="${runner.calculateLearningStatus().name() == 'PAUSED' || runner.calculateLearningStatus().name() == 'STOPPED'}" >
                                         <a th:href="@{'/mlp/' + ${mlpId} + '/pause'}" >
                                             <button class="btn btn-warning btn-circle btn-xl disabled center-block"><i class="fa fa-pause"></i></button>
                                         </a>            
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
-                                    <div th:if="${runner.calculateLearningStatus().name() == 'RUNNING' || runner.calculateLearningStatus().name() == 'PAUSED' }" >
+                                    <div class="top-buffer bottom-buffer" th:if="${runner.calculateLearningStatus().name() == 'RUNNING' || runner.calculateLearningStatus().name() == 'PAUSED' }" >
                                         <a th:href="@{'/mlp/' + ${mlpId} + '/stop'}" >
                                             <button class="btn btn-danger btn-circle btn-xl center-block"><i class="fa fa-stop"></i></button>
                                         </a>                                       
                                     </div>
-                                    <div th:if="${runner.calculateLearningStatus().name() == 'STOPPED'}" >
+                                    <div class="top-buffer bottom-buffer" th:if="${runner.calculateLearningStatus().name() == 'STOPPED'}" >
                                         <a th:href="@{'/mlp/' + ${mlpId} + '/stop'}" >
                                             <button class="btn btn-danger btn-circle btn-xl disabled center-block"><i class="fa fa-stop"></i></button>
                                         </a>                                       
@@ -81,8 +63,8 @@
                             </div>
                         </div>
                     </div> 
-                    <div class="panel panel-primary">
-                        <div class="panel-heading" th:text="#{mlp.view.network.details}">Network details and status</div>
+                    <div class="panel panel-success">
+                        <div class="panel-heading not-so-huge" th:text="#{mlp.view.network.details}">Network details and status</div>
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-lg-9"  th:with="dataSetName=#{'data.set.name.'+${runner.form.dataSetName}}">
@@ -100,19 +82,46 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="panel panel-primary" th:with="dataSetName=#{'data.set.name.'+${runner.form.dataSetName}}">
-								<div class="panel-heading">
-									<a th:href="@{'/mlp/graph/group/' + ${runner.form.dataSetName}}" class="btn btn-warning form-control" th:text="#{graph.view.group(${dataSetName})}">View all graphs errors</a>
+					<div class="row" th:with="dataSetName=#{'data.set.name.'+${runner.form.dataSetName}}">
+						<div class="col-lg-6">
+							<div class="panel panel-green">
+								<div class="panel-heading not-so-huge">
+									<div class="row">
+										<div class="col-xs-3">
+											<i class="fa fa-bar-chart-o fa-5x"></i>
+										</div>
+										<div class="col-xs-9 text-right">
+											<div class="huge"></div>
+										</div>
+									</div>
+								</div>
+								<div class="panel-body">
+									<a th:href="@{'/mlp/graph/group/' + ${runner.form.dataSetName}}" th:text="#{graph.view.group(${dataSetName})}">View all graphs errors</a>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="panel panel-green">
+								<div class="panel-heading not-so-huge">
+									<div class="row">
+										<div class="col-xs-3">
+											<i class="fa fa-bar-chart-o fa-5x"></i>
+										</div>
+										<div class="col-xs-9 text-right">
+											<div class="huge">Global</div>
+										</div>
+									</div>
+								</div>
+								<div class="panel-body">
+									<a th:href="@{'/mlp/graph/all'}">Compare convergence against other data sets.</a>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-lg-12">
-							<div class="panel panel-yellow">
-								<div class="panel-heading" th:text="#{mlp.view.network.error.graph}">Net Error Graph</div>
+							<div class="panel panel-success">
+								<div class="panel-heading not-so-huge" th:text="#{mlp.view.network.error.graph}">Net Error Graph</div>
 								<div class="panel-body">
 									<!-- Chart initialized on element netErrorGraphPlaceholder-->
 									<div id="netErrorGraphPlaceholder"></div>                       
@@ -130,7 +139,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-green">
-                        <div class="panel-heading" th:text="#{mlp.view.network.representation}">Network Representation</div>
+                        <div class="panel-heading not-so-huge" th:text="#{mlp.view.network.representation}">Network Representation</div>
                         <div class="panel-body">
                             <div id="container"></div>
                         </div>
