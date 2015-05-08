@@ -25,3 +25,7 @@ a.panel-link-text{ color: white;}
 p {
 	font-size: 15px
 }
+
+.perceptron-back{
+	background-image: url("/images/Dermatology-22-hidden-layer-zoom-in.png");
+}
