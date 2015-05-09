@@ -42,7 +42,7 @@ public class MultilayerPerceptronController extends BaseController {
 
 	@Autowired
 	GraphService graphService;
-	
+
 	@Autowired
 	I18NService i18n;
 
@@ -139,7 +139,7 @@ public class MultilayerPerceptronController extends BaseController {
 	@RequestMapping(value = "/graph/group/{dataSetInfo}")
 	public String graph(Model model, @PathVariable String dataSetInfo) {
 		List<MultiLayerPerceptronRunner> runners = multiLayerPerceptronService.getRunners(DataSetInfo.valueOf(dataSetInfo));
-		if(runners.isEmpty()){
+		if (runners.isEmpty()) {
 			model.addAttribute("globalNotification", "There were no trained perceptrons to graph.");
 		}
 		model.addAttribute("runners", runners);
@@ -161,32 +161,32 @@ public class MultilayerPerceptronController extends BaseController {
 	@RequestMapping(value = "/{mlpId}/stop")
 	public String stop(@PathVariable String mlpId) {
 		multiLayerPerceptronService.stopLearning(mlpId);
-		return "redirect:/mlp/" + mlpId +"/view";
+		return "redirect:/mlp/" + mlpId + "/view";
 	}
 
 	@RequestMapping(value = "/{mlpId}/pause")
 	public String pause(@PathVariable String mlpId) {
 		multiLayerPerceptronService.pauseLearning(mlpId);
-		return "redirect:/mlp/" + mlpId +"/view";
+		return "redirect:/mlp/" + mlpId + "/view";
 	}
 
 	@RequestMapping(value = "/{mlpId}/resume")
 	public String resume(@PathVariable String mlpId) {
 		multiLayerPerceptronService.resumeLearning(mlpId);
-		return "redirect:/mlp/" + mlpId +"/view";
+		return "redirect:/mlp/" + mlpId + "/view";
 	}
 
 	@RequestMapping(value = "/{mlpId}/test")
 	public String test(@PathVariable String mlpId) {
 		multiLayerPerceptronService.testPerceptron(mlpId);
-		return "redirect:/mlp/" + mlpId +"/view";
+		return "redirect:/mlp/" + mlpId + "/view";
 	}
 
 	@RequestMapping(value = "/save/{dataSetInfo}")
 	public String save(@PathVariable String dataSetInfo, RedirectAttributes redirect) throws IOException {
 		DataSetInfo dataSet = DataSetInfo.valueOf(dataSetInfo.toUpperCase());
 		multiLayerPerceptronService.saveRunners(dataSet);
-		redirect.addFlashAttribute("globalNotification", "Successfully saved perceptrons with dataset: " + i18n.getMessage("data.set.name." +dataSet.name()));
+		redirect.addFlashAttribute("globalNotification", "Successfully saved perceptrons trained on  " + i18n.getMessage("data.set.name." + dataSet.name()) + " + data set.");
 		return "redirect:/mlp/dashboard";
 	}
 
@@ -194,7 +194,7 @@ public class MultilayerPerceptronController extends BaseController {
 	public String retrieve(@PathVariable String dataSetInfo, RedirectAttributes redirect) throws IOException, ClassNotFoundException {
 		DataSetInfo dataSet = DataSetInfo.valueOf(dataSetInfo.toUpperCase());
 		multiLayerPerceptronService.retrieveRunners(dataSet);
-		redirect.addFlashAttribute("globalNotification", "Successfully retrieved perceptrons with dataset: " + i18n.getMessage("data.set.name." +dataSet.name()));
+		redirect.addFlashAttribute("globalNotification", "Successfully retrieved perceptrons trained on " + i18n.getMessage("data.set.name." + dataSet.name()) + " data set.");
 		return "redirect:/mlp/dashboard";
 	}
 

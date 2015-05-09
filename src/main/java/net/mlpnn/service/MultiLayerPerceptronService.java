@@ -325,6 +325,9 @@ public class MultiLayerPerceptronService {
 		HashMap<String, MultiLayerPerceptronRunner> runners = (HashMap<String, MultiLayerPerceptronRunner>) obj;
 		for (Map.Entry<String, MultiLayerPerceptronRunner> entry : runners.entrySet()) {
 			MultiLayerPerceptronRunner runner = entry.getValue();
+			
+			//refresh the config - when the application starts the config is initialized, so we must refresh the stale config from the repo
+			runner.setConfig(config); 
 			DataSet dataSet = runner.initializeDataSet(runner.getForm());
 			runner.getPerceptron().getLearningRule().stopLearning();// we need to explicitly set this to stopped when deserializing a runner 
 			runner.getPerceptron().getLearningRule().setTrainingSet(dataSet);
