@@ -170,7 +170,7 @@
 								// data we could merge it with what we already have.
 								data = [series];
 								$.plot("#netErrorGraphPlaceholder", data);
-								setTimeout(fetchData, 5000);
+								setTimeout(fetchData, 60000);
 							}
 
 							$.ajax({
@@ -178,12 +178,12 @@
 								type: "GET",
 								dataType: "json",
 								success: onDataReceived,
-								fail: setTimeout(fetchData, 5000)
+								fail: setTimeout(fetchData, 60000)
 							});
 
 						}
 
-						setTimeout(fetchData, 500);
+						setTimeout(fetchData, 2000);
 
 					});
 
