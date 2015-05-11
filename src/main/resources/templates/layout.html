@@ -79,7 +79,12 @@
 								</ul>
 							</li>
 							<li id="dataset-menu">
-								<a id="dataset-download" th:href="@{'/dataset/dashboard'}"><i class="fa fa-database fa-fw"></i> Download Data Sets</a>
+								<a id="dataset-menu-heading" href="#"><i class="fa fa-database fa-fw"></i>Data Sets <span class="fa arrow"></span></a>
+								<ul class="nav nav-second-level">
+									<li>
+										<a id="dataset-download" th:href="@{'/dataset/dashboard'}"><i class="fa fa-download fa-fw"></i> Download</a>
+									</li>
+								</ul>
 							</li>	
 							<li id="graph-menu">
 								<a id="graph-menu-heading" href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Graphs <span class="fa arrow"></span></a>
@@ -124,11 +129,17 @@
         <script src="../static/js/sb-admin-2.js" th:src="@{'/js/sb-admin-2.js'}"></script>
         <script src="../static/js/sigma/sigma.min.js" th:src="@{'/js/sigma/sigma.min.js'}"></script>
         <script src="../static/js/sigma/plugins/sigma.parsers.json.min.js" th:src="@{'/js/sigma/plugins/sigma.parsers.json.min.js'}"></script> 
-        <script src="../static/js/plugins/flot/jquery.flot.js" th:src="@{'/js/plugins/flot/jquery.flot.js'}"></script>
+
+		<!-- flot chart - can probably remove this in the future. Can't plot big data -->
+		<script src="../static/js/plugins/flot/jquery.flot.js" th:src="@{'/js/plugins/flot/jquery.flot.js'}"></script>
         <script src="../static/js/plugins/flot/jquery.flot.resize.js" th:src="@{'/js/plugins/flot/jquery.flot.resize.js'}"></script>
-        <!-- DataTables JavaScript -->
+
+		<!-- DataTables JavaScript -->
         <script src="../static/js/plugins/dataTables/jquery.dataTables.js" th:src="@{'/js/plugins/dataTables/jquery.dataTables.js'}"></script>
         <script src="../static/js/plugins/dataTables/dataTables.bootstrap.js" th:src="@{'/js/plugins/dataTables/dataTables.bootstrap.js'}"></script>
+
+		<!-- New chart library -->
+		<script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.0/dygraph-combined.js"></script>
 
         <!-- This line must stay last -->
         <section layout:fragment="custom-js" th:remove="tag"></section>

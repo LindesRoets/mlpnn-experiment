@@ -130,4 +130,9 @@ public class ExampleController extends BaseController {
 		return dto;
 	}
 
+	@RequestMapping("/dygraph/example")
+	public String dygraph(Model model) {
+		return "dygraph-example";
+	}
+
 }

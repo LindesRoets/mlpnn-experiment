@@ -17,7 +17,7 @@ $(document).ready(function () {
 		$('#mlp-create').addClass('active');
         $('#mlp-dashboard-actions').addClass('active');			
 	} else if (pageTitle === 'Download Data Sets') {
-		//$('#dataset-menu').addClass('active');
+		$('#dataset-menu').addClass('active');
 		$('#dataset-download').addClass('active');
 	}
 });

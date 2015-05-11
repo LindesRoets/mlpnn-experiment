@@ -186,7 +186,7 @@ public class MultilayerPerceptronController extends BaseController {
 	public String save(@PathVariable String dataSetInfo, RedirectAttributes redirect) throws IOException {
 		DataSetInfo dataSet = DataSetInfo.valueOf(dataSetInfo.toUpperCase());
 		multiLayerPerceptronService.saveRunners(dataSet);
-		redirect.addFlashAttribute("globalNotification", "Successfully saved perceptrons trained on  " + i18n.getMessage("data.set.name." + dataSet.name()) + " + data set.");
+		redirect.addFlashAttribute("globalNotification", "Successfully saved perceptrons trained on  " + i18n.getMessage("data.set.name." + dataSet.name()) + " data set.");
 		return "redirect:/mlp/dashboard";
 	}
 
