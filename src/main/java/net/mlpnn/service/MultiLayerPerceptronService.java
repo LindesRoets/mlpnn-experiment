@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.zip.GZIPOutputStream;
 import net.mlpnn.ApplicationConfiguration;
 import net.mlpnn.dto.DashBoardDTO;
 import net.mlpnn.dto.NetworkStatusDTO;
@@ -275,8 +276,9 @@ public class MultiLayerPerceptronService {
 	 * @throws IOException - 
 	 */
 	public void saveRunners(DataSetInfo dataSetInfo) throws IOException {
-		FileOutputStream fout = new FileOutputStream(config.getDatasetFilePath() + "/" + dataSetInfo.name() + "-perceptrons.ser");
-		ObjectOutputStream oos = new ObjectOutputStream(fout);
+		FileOutputStream fout = new FileOutputStream(config.getDatasetFilePath() + "/" + dataSetInfo.name() + "-perceptrons.ser.gz");
+		GZIPOutputStream gz = new GZIPOutputStream(fout);
+		ObjectOutputStream oos = new ObjectOutputStream(gz);
 
 		//create new array to contain all the runners to be saved
 		HashMap<String, MultiLayerPerceptronRunner> dataSetRunners = new HashMap<>();
