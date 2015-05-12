@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import net.mlpnn.ApplicationConfiguration;
 import net.mlpnn.dto.DashBoardDTO;
@@ -270,7 +271,8 @@ public class MultiLayerPerceptronService {
 	}
 
 	/**
-	 * Saves all the runners for which the data set used matches the parameter.
+	 * Saves all the runners for which the data set used matches the parameter. Note that all data that is in memory will 
+	 * overwrite what is on disk
 	 *
 	 * @param dataSetInfo {@link DataSetInfo}
 	 * @throws IOException - 
@@ -289,28 +291,15 @@ public class MultiLayerPerceptronService {
 		}
 
 		oos.writeObject(dataSetRunners);
+		gz.close();
+		oos.close();
 	}
 
 	public void retrieveRunners() throws IOException, ClassNotFoundException {
+		
 		//Read all the saved perceptron runners from disk
-		FileInputStream fis = new FileInputStream(config.getDatasetFilePath() + "/perceptrons.ser");
-		BufferedInputStream bis = new BufferedInputStream(fis);
-		ObjectInputStream ois = new ObjectInputStream(bis);
-		Object obj = ois.readObject();
-		ois.close();
-
-		//Re-instantiate the data sets - this was not serialized
-		HashMap<String, MultiLayerPerceptronRunner> runners = (HashMap<String, MultiLayerPerceptronRunner>) obj;
-		Set<String> ids = runners.keySet();
-		String[] idss = ids.toArray(new String[ids.size()]);
-		List<String> mlpIds = Arrays.asList(idss);
-		Collections.sort(mlpIds);
-		for (String mlpId : mlpIds) {
-			MultiLayerPerceptronRunner runner = runners.get(mlpId);
-			DataSet dataSet = runner.initializeDataSet(runner.getForm());
-			runner.getPerceptron().getLearningRule().stopLearning();// we need to explicitly set this to stopped when deserializing a runner 
-			runner.getPerceptron().getLearningRule().setTrainingSet(dataSet);
-			this.multiLayerPerceptronRunners.put(mlpId, runner);
+		for (DataSetInfo info : DataSetInfo.values()){
+			retrieveRunners(info);
 		}
 
 	}
