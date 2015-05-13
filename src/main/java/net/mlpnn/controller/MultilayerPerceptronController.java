@@ -148,11 +148,12 @@ public class MultilayerPerceptronController extends BaseController {
 	}
 
 	@RequestMapping(value = "/graph/all")
-	public String graphAll(Model model) {
+	public String graphAll(Model model) throws IOException {
 		HashMap<DataSetInfo, List<MultiLayerPerceptronRunner>> groups = multiLayerPerceptronService.getRunnersByGroup();
 		for (DataSetInfo dataSet : DataSetInfo.values()) {
 			List<MultiLayerPerceptronRunner> group = groups.get(dataSet);
 			model.addAttribute(dataSet.name(), graphService.getAllConvergenceErrors(group));
+			graphService.writeConvergenceCSV(group);
 		}
 
 		return "mlp-graph-all";

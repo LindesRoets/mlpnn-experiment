@@ -4,3 +4,4 @@
 .classpath
 .project
 /data
+/src/main/resources/public/report/runtime/

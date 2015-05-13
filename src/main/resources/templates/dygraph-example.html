@@ -89,10 +89,13 @@
 
 					g2 = new Dygraph(
 							document.getElementById("ajaxGraphPlaceholder"),
-							"/report/example.csv",
-							{ylabel: 'Net error',
-							xlabel: 'Epoch',
-							legend: 'always'}
+							"/report/IRIS-convergenceReport.csv",
+							{
+								ylabel: 'Epoch',
+								xlabel: 'Neuron Count',
+								legend: 'always',
+								showRangeSelector: true
+							}
 					);
 				});
 
