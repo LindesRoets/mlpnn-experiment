@@ -57,22 +57,26 @@
 									<li>
 										<a href="#"><i class="fa fa-database fa-fw"></i> Retrieve</a>
 										<ul class="nav nav-third-level">
+											<!-- Hiding this feature for now. If you don't have enough memory this will make the app crash if their are many runners to load
 											<li>
 												<a id="mlp-retrieve-all" th:href="@{'/mlp/retrieve/all'}"><i class="fa fa-database fa-fw"></i> All</a>
 											</li>
+											-->
 											<li th:each="dataset : ${datasets}" th:with="dataSetName=#{'data.set.name.'+${dataset.name()}}">
-												<a th:attr="id='mlp-retrieve-'+${dataset}" th:href="@{'/mlp/retrieve/'+${dataset}}" th:text="'Retrieve '+${dataSetName}"><i class="fa fa-save fa-fw"></i> Retrieve DataSet</a>
+												<a th:attr="id='mlp-retrieve-'+${dataset}" th:href="@{'/mlp/retrieve/'+${dataset}}" th:text="${dataSetName} + ' tests'"><i class="fa fa-save fa-fw"></i> Retrieve DataSet</a>
 											</li>
 										</ul>
 									</li>
 									<li>
 										<a href="#"><i class="fa fa-save fa-fw"></i> Save</a>
 										<ul class="nav nav-third-level">
+											<!-- Hiding thid feature for now - if used wrongly it will wipe all your data
 											<li>
 												<a id="mlp-save-all" th:href="@{'/mlp/save/all'}"><i class="fa fa-save fa-fw"></i> All</a>
 											</li>
+											-->
 											<li th:each="dataset : ${datasets}" th:with="dataSetName=#{'data.set.name.'+${dataset.name()}}">
-												<a th:attr="id='mlp-save-'+${dataset}" th:href="@{'/mlp/save/'+${dataset}}" th:text="'Save '+${dataSetName}"><i class="fa fa-save fa-fw"></i> Save DataSet</a>
+												<a th:attr="id='mlp-save-'+${dataset}" th:href="@{'/mlp/save/'+${dataset}}" th:text="${dataSetName} + ' tests'"><i class="fa fa-save fa-fw"></i> Save DataSet</a>
 											</li>
 										</ul>
 									</li>

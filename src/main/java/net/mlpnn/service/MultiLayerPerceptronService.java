@@ -306,12 +306,14 @@ public class MultiLayerPerceptronService {
 
 	public void retrieveRunners(DataSetInfo dataSetInfo) throws IOException, ClassNotFoundException {
 		//Read all the saved perceptron runners from disk
-		FileInputStream fis = new FileInputStream(config.getDatasetFilePath() + "/" + dataSetInfo.name() + "-perceptrons.ser");
+		FileInputStream fis = new FileInputStream(config.getDatasetFilePath() + "/" + dataSetInfo.name() + "-perceptrons.ser.gz");
 		BufferedInputStream bis = new BufferedInputStream(fis);
-		ObjectInputStream ois = new ObjectInputStream(bis);
+		GZIPInputStream gis = new GZIPInputStream(bis);
+		ObjectInputStream ois = new ObjectInputStream(gis);
 		Object obj = ois.readObject();
 		ois.close();
-
+		gis.close();
+		
 		//Re-instantiate the data sets - this was not serialized
 		HashMap<String, MultiLayerPerceptronRunner> runners = (HashMap<String, MultiLayerPerceptronRunner>) obj;
 		for (Map.Entry<String, MultiLayerPerceptronRunner> entry : runners.entrySet()) {
