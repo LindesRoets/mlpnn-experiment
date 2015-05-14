@@ -84,13 +84,20 @@ public class GraphService {
 	 *
 	 * @param runners The runners from which the csv file will be compiled. The first column is the hidden layer neuron count. The
 	 * second column is the epoch in which learning converged or were stopped for any other reason. The csv file gets written to
-	 * src/main/resources/public/report/runtime with a file name <{DataSetInfo.name()}>-convergenceReport.csv
+	 * src/main/resources/public/report/runtime with a file name dataSetInfo.name()-convergenceReport.csv
+	 * @throws IOException hrows exception when reading and writing files to disk
 	 */
 	public void writeConvergenceCSV(List<MultiLayerPerceptronRunner> runners) throws IOException {
 		if (runners == null || runners.isEmpty()) {
 			return;
 		}
 
+		//Check if runtime folder exist - create if not
+		File test = new File(PATH_TO_RUNTIME_REPORTS_FROM_SRC);
+		if(!test.exists()){
+			test.mkdirs();
+		}
+		
 		File csvFile = FileUtils.toFile(this.getClass().getResource(PATH_TO_RUNTIME_REPORTS + runners.get(0).getForm().getDataSetName() + CONVERGENCE_REPORT_SUFFIX));
 		FileOutputStream fos = null;
 		if (csvFile == null) {
