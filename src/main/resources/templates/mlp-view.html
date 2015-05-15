@@ -158,7 +158,6 @@
 					$(function () {
 
 						var data = [];
-						var alreadyFetched = {};
 						var mlpId = /*[[${mlpId}]]*/'1';
 						var learningStatus = /*[[${runner.calculateLearningStatus().name()}]]*/'RUNNING';
 						$.plot("#netErrorGraphPlaceholder", data);
@@ -166,11 +165,17 @@
 						function fetchData() {
 
 							function onDataReceived(series) {
+								
 								// Load all the data in one pass; if we only got partial
 								// data we could merge it with what we already have.
 								data = [series];
 								$.plot("#netErrorGraphPlaceholder", data);
-								setTimeout(fetchData, 5000);
+								
+								//stop recurring function if learning is STOPPED
+								if(learningStatus !== "STOPPED"){
+									setTimeout(fetchData, 60000);
+								}
+								
 							}
 
 							$.ajax({
@@ -178,12 +183,12 @@
 								type: "GET",
 								dataType: "json",
 								success: onDataReceived,
-								fail: setTimeout(fetchData, 5000)
+								fail: setTimeout(fetchData, 120000)
 							});
 
 						}
 
-						setTimeout(fetchData, 500);
+						setTimeout(fetchData, 1000);
 
 					});
 
@@ -204,7 +209,8 @@
 					sigma.parsers.json('/mlp/' + mlpId + '/topology', {
 						container: 'container',
 						settings: {
-							defaultNodeColor: '#d9534f'
+							defaultNodeColor: '#d43f3a'
+							//defaultNodeColor: '#d9534f'
 						}},
 					function (s) {
 						// We first need to save the original colors of our

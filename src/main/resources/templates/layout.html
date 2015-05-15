@@ -25,11 +25,15 @@
         <div id="wrapper">
 
             <!-- Navigation -->
-            <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-                <div class="navbar-header navbar-right">
-                </div>
-                <!-- /.navbar-header -->
-
+            <nav class="navbar navbar-default navbar-static-top perceptron-back" role="navigation" style="margin-bottom: 0">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+				</div>
                 <div class="navbar-default sidebar" role="navigation">
                     <div class="sidebar-nav navbar-collapse">
                         <ul class="nav" id="side-menu">
@@ -53,29 +57,38 @@
 									<li>
 										<a href="#"><i class="fa fa-database fa-fw"></i> Retrieve</a>
 										<ul class="nav nav-third-level">
+											<!-- Hiding this feature for now. If you don't have enough memory this will make the app crash if their are many runners to load
 											<li>
 												<a id="mlp-retrieve-all" th:href="@{'/mlp/retrieve/all'}"><i class="fa fa-database fa-fw"></i> All</a>
 											</li>
+											-->
 											<li th:each="dataset : ${datasets}" th:with="dataSetName=#{'data.set.name.'+${dataset.name()}}">
-												<a th:attr="id='mlp-retrieve-'+${dataset}" th:href="@{'/mlp/retrieve/'+${dataset}}" th:text="'Retrieve '+${dataSetName}"><i class="fa fa-save fa-fw"></i> Retrieve DataSet</a>
+												<a th:attr="id='mlp-retrieve-'+${dataset}" th:href="@{'/mlp/retrieve/'+${dataset}}" th:text="${dataSetName} + ' tests'"><i class="fa fa-save fa-fw"></i> Retrieve DataSet</a>
 											</li>
 										</ul>
 									</li>
 									<li>
 										<a href="#"><i class="fa fa-save fa-fw"></i> Save</a>
 										<ul class="nav nav-third-level">
+											<!-- Hiding thid feature for now - if used wrongly it will wipe all your data
 											<li>
 												<a id="mlp-save-all" th:href="@{'/mlp/save/all'}"><i class="fa fa-save fa-fw"></i> All</a>
 											</li>
+											-->
 											<li th:each="dataset : ${datasets}" th:with="dataSetName=#{'data.set.name.'+${dataset.name()}}">
-												<a th:attr="id='mlp-save-'+${dataset}" th:href="@{'/mlp/save/'+${dataset}}" th:text="'Save '+${dataSetName}"><i class="fa fa-save fa-fw"></i> Save DataSet</a>
+												<a th:attr="id='mlp-save-'+${dataset}" th:href="@{'/mlp/save/'+${dataset}}" th:text="${dataSetName} + ' tests'"><i class="fa fa-save fa-fw"></i> Save DataSet</a>
 											</li>
 										</ul>
 									</li>
 								</ul>
 							</li>
 							<li id="dataset-menu">
-								<a id="dataset-download" th:href="@{'/dataset/dashboard'}"><i class="fa fa-database fa-fw"></i> Download Data Sets</a>
+								<a id="dataset-menu-heading" href="#"><i class="fa fa-database fa-fw"></i>Data Sets <span class="fa arrow"></span></a>
+								<ul class="nav nav-second-level">
+									<li>
+										<a id="dataset-download" th:href="@{'/dataset/dashboard'}"><i class="fa fa-download fa-fw"></i> Download</a>
+									</li>
+								</ul>
 							</li>	
 							<li id="graph-menu">
 								<a id="graph-menu-heading" href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Graphs <span class="fa arrow"></span></a>
@@ -120,11 +133,17 @@
         <script src="../static/js/sb-admin-2.js" th:src="@{'/js/sb-admin-2.js'}"></script>
         <script src="../static/js/sigma/sigma.min.js" th:src="@{'/js/sigma/sigma.min.js'}"></script>
         <script src="../static/js/sigma/plugins/sigma.parsers.json.min.js" th:src="@{'/js/sigma/plugins/sigma.parsers.json.min.js'}"></script> 
-        <script src="../static/js/plugins/flot/jquery.flot.js" th:src="@{'/js/plugins/flot/jquery.flot.js'}"></script>
+
+		<!-- flot chart - can probably remove this in the future. Can't plot big data -->
+		<script src="../static/js/plugins/flot/jquery.flot.js" th:src="@{'/js/plugins/flot/jquery.flot.js'}"></script>
         <script src="../static/js/plugins/flot/jquery.flot.resize.js" th:src="@{'/js/plugins/flot/jquery.flot.resize.js'}"></script>
-        <!-- DataTables JavaScript -->
+
+		<!-- DataTables JavaScript -->
         <script src="../static/js/plugins/dataTables/jquery.dataTables.js" th:src="@{'/js/plugins/dataTables/jquery.dataTables.js'}"></script>
         <script src="../static/js/plugins/dataTables/dataTables.bootstrap.js" th:src="@{'/js/plugins/dataTables/dataTables.bootstrap.js'}"></script>
+
+		<!-- New chart library -->
+		<script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.0/dygraph-combined.js"></script>
 
         <!-- This line must stay last -->
         <section layout:fragment="custom-js" th:remove="tag"></section>

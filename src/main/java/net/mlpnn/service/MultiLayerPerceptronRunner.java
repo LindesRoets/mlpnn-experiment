@@ -169,7 +169,7 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 	protected DataSet initializeDataSet(MultilayerPercetpronParametersForm form) {
 		form.setDataSetName(form.getDataSetName().toUpperCase());
 		DataSetInfo dataSetInfo = DataSetInfo.valueOf(form.getDataSetName());
-		String filePath = config.getDatasetFilePath() + "/" + dataSetInfo.trainingFileName;
+		String filePath = getConfig().getDatasetFilePath() + "/" + dataSetInfo.trainingFileName;
 		DataSet dataSet = DataSet.createFromFile(filePath, dataSetInfo.numberOfInputs, dataSetInfo.numberOfOutputs, ",", false);
 		MaxMinNormalizer normalizer = new MaxMinNormalizer();
 		normalizer.normalize(dataSet);
@@ -328,6 +328,14 @@ public class MultiLayerPerceptronRunner implements LearningEventListener, Runnab
 	 */
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public ApplicationConfiguration getConfig() {
+		return config;
+	}
+
+	public void setConfig(ApplicationConfiguration config) {
+		this.config = config;
 	}
 
 }

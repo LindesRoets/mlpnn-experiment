@@ -4,7 +4,7 @@
       layout:decorator="layout">
 
     <head>
-        <title>List MultiLayer Perceptrons</title>
+        <title>List Multilayer Perceptrons</title>
     </head>
     <body>
         <div layout:fragment="content">
@@ -47,7 +47,8 @@
 				$(document).ready(function () {
 					$('#mlp-table').DataTable({
 						responsive: true,
-						"lengthMenu": [[100, 25, 50, 10, -1], [100, 25, 50, 10, "All"]]
+						stateSave: true,
+						"lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
 					});
 				});
 

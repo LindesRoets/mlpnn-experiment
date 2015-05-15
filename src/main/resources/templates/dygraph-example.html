@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+
+    <head>
+        <title>Dygraph example</title>
+        <style type="text/css">
+            #placeholder,  #ajaxGraphPlaceholder{
+                width: 100%;
+                height: 500px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div layout:fragment="content">
+            <div class="row">
+                <div class="col-lg-12"><h1 class="page-header" th:text="#{flot.sandbox}">Dygraph Sandbox</h1></div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading" th:text="#{mlp.view.network.error.graph}">Net Error Graph</div>
+                        <div class="panel-body">
+                            <!-- Chart initialized on element placeholder-->
+                            <div class="demo-container">
+                                <div id="placeholder" class="demo-placeholder"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			</div>
+			<div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">What</div>
+                        <div class="panel-body">
+                            <p>You don't have to do much to get an attractive plot.  Create a placeholder, make sure it has dimensions (so Flot knows at what size to draw the plot), then call the plot function with your data.</p>
+                            <p>The axes are automatically scaled.</p> 
+                            <p class="message">Yellow</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading" th:text="#{mlp.view.network.error.graph}">Net Error Graph</div>
+                        <div class="panel-body">
+                            <!-- Chart initialized on element ajaxGraphPlaceholder-->
+                            <div id="ajaxGraphPlaceholder"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div layout:fragment="custom-js">
+            <script th:inline="javascript">
+				/*<![CDATA[*/
+				//examples taken and inspired from https://github.com/flot/flot/tree/master/examples
+				//Some changes were made to the original examples to fit this scenario
+
+				$(document).ready(function () {
+					g = new Dygraph(
+							// containing div
+							document.getElementById("placeholder"),
+							// CSV or path to a CSV file.
+							"Date,Ny,Sf\n" +
+							"1,65,66\n" +
+							"2,70,77\n" +
+							"3,75,66\n" +
+							"4,75,50\n" +
+							"5,85,66\n" +
+							"6,90,67\n" +
+							"7,90,77\n" +
+							"8,90,99\n" +
+							"9,90,89\n" +
+							"10,90,99\n" +
+							"11,60,88\n",
+							{
+								title: 'Daily Temperatures in New York vs. San Francisco',
+								ylabel: 'Temperature (F)',
+								legend: 'always',
+								labelsDivStyles: {'textAlign': 'right'},
+								showRangeSelector: true
+							});
+
+					g2 = new Dygraph(
+							document.getElementById("ajaxGraphPlaceholder"),
+							"/report/IRIS-convergenceReport.csv",
+							{
+								ylabel: 'Epoch',
+								xlabel: 'Neuron Count',
+								legend: 'always',
+								showRangeSelector: true
+							}
+					);
+				});
+
+				/*]]>*/
+            </script>
+        </div>
+    </body>
+</html>

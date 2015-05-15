@@ -4,7 +4,7 @@
       layout:decorator="layout">
 
     <head>         
-        <title>MultiLayer Perceptron Global Convergence Graph For All Data Sets</title>
+        <title>Multilayer Perceptron Global Convergence Graph For All Data Sets</title>
     </head>
     <body>
         <div layout:fragment="content">
@@ -19,8 +19,8 @@
                 </div>              
             </div>
             <div class="row">
-                <div class="col-lg-6">
-                    <div class="panel panel-success">
+                <div class="col-lg-12">
+                    <div class="panel panel-green">
                         <div class="panel-heading not-so-huge" >Red Wine Quality Convergence Graph</div>
                         <div class="panel-body">
                             <!-- Chart initialized on element netErrorGraphPlaceholder-->
@@ -28,8 +28,8 @@
                         </div>
                     </div>						
                 </div>
-				<div class="col-lg-6">
-                    <div class="panel panel-success">
+				<div class="col-lg-12">
+                    <div class="panel panel-green">
                         <div class="panel-heading not-so-huge">White Wine Quality Convergence Graph</div>
                         <div class="panel-body">
                             <!-- Chart initialized on element netErrorGraphPlaceholder-->
@@ -40,8 +40,8 @@
             </div>
 
 			<div class="row">
-                <div class="col-lg-6">
-                    <div class="panel panel-success">
+                <div class="col-lg-12">
+                    <div class="panel panel-green">
                         <div class="panel-heading not-so-huge" >Iris Convergence Graph</div>
                         <div class="panel-body">
                             <!-- Chart initialized on element netErrorGraphPlaceholder-->
@@ -49,8 +49,8 @@
                         </div>
                     </div>						
                 </div>
-				<div class="col-lg-6">
-                    <div class="panel panel-success">
+				<div class="col-lg-12">
+                    <div class="panel panel-green">
                         <div class="panel-heading not-so-huge" >Seed Convergence Graph</div>
                         <div class="panel-body">
                             <!-- Chart initialized on element netErrorGraphPlaceholder-->
@@ -61,8 +61,8 @@
             </div>
 
 			<div class="row">
-                <div class="col-lg-6">
-                    <div class="panel panel-success">
+                <div class="col-lg-12">
+                    <div class="panel panel-green">
                         <div class="panel-heading not-so-huge" >Glass Convergence Graph</div>
                         <div class="panel-body">
                             <!-- Chart initialized on element netErrorGraphPlaceholder-->
@@ -70,8 +70,8 @@
                         </div>
                     </div>						
                 </div>
-				<div class="col-lg-6">
-                    <div class="panel panel-success">
+				<div class="col-lg-12">
+                    <div class="panel panel-green">
                         <div class="panel-heading not-so-huge" >Skin Segmentation Convergence Graph</div>
                         <div class="panel-body">
                             <!-- Chart initialized on element netErrorGraphPlaceholder-->
@@ -82,8 +82,8 @@
             </div>
 
 			<div class="row">
-                <div class="col-lg-6">
-                    <div class="panel panel-success">
+                <div class="col-lg-12">
+                    <div class="panel panel-green">
                         <div class="panel-heading not-so-huge" >Dermatology Convergence Graph</div>
                         <div class="panel-body">
                             <!-- Chart initialized on element netErrorGraphPlaceholder-->
@@ -91,8 +91,8 @@
                         </div>
                     </div>						
                 </div>
-				<div class="col-lg-6">
-                    <div class="panel panel-success">
+				<div class="col-lg-12">
+                    <div class="panel panel-green">
                         <div class="panel-heading not-so-huge" >Ionosphere Convergence Graph</div>
                         <div class="panel-body">
                             <!-- Chart initialized on element netErrorGraphPlaceholder-->
@@ -112,37 +112,92 @@
             <script th:inline="javascript">
 				/*<![CDATA[*/
 
-				var series1 = /*[[${IRIS}]]*/'1';
-				data1 = [series1];
-				$.plot("#graphIris", data1);
+//				var series1 = /*[[${IRIS}]]*/'1';
+//				data1 = [series1];
+//				$.plot("#graphIris", data1);
+//
+//				var series2 = /*[[${SEEDS}]]*/'1';
+//				data2 = [series2];
+//				$.plot("#graphSeeds", data2);
+//
+//				var series3 = /*[[${WINE_QUALITY_RED}]]*/'1';
+//				data3 = [series3];
+//				$.plot("#graphRedWine", data3);
+//
+//				var series4 = /*[[${WINE_QUALITY_WHITE}]]*/'1';
+//				data4 = [series4];
+//				$.plot("#graphWhiteWine", data4);
+//
+//				var series5 = /*[[${GLASS}]]*/'1';
+//				data5 = [series5];
+//				$.plot("#graphGlass", data5);
+//
+//				var series6 = /*[[${SKIN_SEGMENTATION}]]*/'1';
+//				data6 = [series6];
+//				$.plot("#graphSkin", data6);
+//
+//				var series7 = /*[[${DERMATOLOGY}]]*/'1';
+//				data7 = [series7];
+//				$.plot("#graphDerm", data7);
+//
+//				var series8 = /*[[${IONOSPHERE}]]*/'1';
+//				data8 = [series8];
+//				$.plot("#graphIonosphere", data8);
 
-				var series2 = /*[[${SEEDS}]]*/'1';
-				data2 = [series2];
-				$.plot("#graphSeeds", data2);
+				var optionsForGraph = {
+							ylabel: 'Epoch',
+							xlabel: 'Neuron Count',
+							legend: 'always',
+							strokeWidth: 1.5,
+							color: ['#eea236'],
+							pointSize : 4,
+							showRangeSelector: true,
+							rangeSelectorHeight: 80,
+							rangeSelectorPlotStrokeColor: '#eea236',
+							rangeSelectorPlotFillColor: '#f0ad4e'
+						};
 
-				var series3 = /*[[${WINE_QUALITY_RED}]]*/'1';
-				data3 = [series3];
-				$.plot("#graphRedWine", data3);
-
-				var series4 = /*[[${WINE_QUALITY_WHITE}]]*/'1';
-				data4 = [series4];
-				$.plot("#graphWhiteWine", data4);
-
-				var series5 = /*[[${GLASS}]]*/'1';
-				data5 = [series5];
-				$.plot("#graphGlass", data5);
-
-				var series6 = /*[[${SKIN_SEGMENTATION}]]*/'1';
-				data6 = [series6];
-				$.plot("#graphSkin", data6);
-
-				var series7 = /*[[${DERMATOLOGY}]]*/'1';
-				data7 = [series7];
-				$.plot("#graphDerm", data7);
-
-				var series8 = /*[[${IONOSPHERE}]]*/'1';
-				data8 = [series8];
-				$.plot("#graphIonosphere", data8);
+				g1 = new Dygraph(
+						document.getElementById("graphIris"),
+						"/report/runtime/IRIS-convergenceReport.csv",
+						optionsForGraph
+				);
+		
+				g2 = new Dygraph(
+						document.getElementById("graphSeeds"),
+						"/report/runtime/SEEDS-convergenceReport.csv",
+						optionsForGraph
+				);
+				g3 = new Dygraph(
+						document.getElementById("graphRedWine"),
+						"/report/runtime/WINE_QUALITY_RED-convergenceReport.csv",
+						optionsForGraph
+				);
+				g4 = new Dygraph(
+						document.getElementById("graphWhiteWine"),
+						"/report/runtime/WINE_QUALITY_WHITE-convergenceReport.csv",
+						optionsForGraph
+				);
+				g5 = new Dygraph(
+						document.getElementById("graphGlass"),
+						"/report/runtime/GLASS-convergenceReport.csv",
+						optionsForGraph
+				);
+				g6 = new Dygraph(
+						document.getElementById("graphSkin"),
+						"/report/runtime/SKIN_SEGMENTATION-convergenceReport.csv",
+						optionsForGraph
+				);
+				g7 = new Dygraph(
+						document.getElementById("graphDerm"),
+						"/report/runtime/DERMATOLOGY-convergenceReport.csv",
+						optionsForGraph
+				);
+				g8 = new Dygraph(
+						document.getElementById("graphIonosphere"),
+						"/report/runtime/IONOSPHERE-convergenceReport.csv",
+						optionsForGraph
+				);
 
 				/*]]>*/
             </script>

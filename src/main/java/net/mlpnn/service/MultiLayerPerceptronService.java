@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import net.mlpnn.ApplicationConfiguration;
 import net.mlpnn.dto.DashBoardDTO;
 import net.mlpnn.dto.NetworkStatusDTO;
@@ -269,14 +271,16 @@ public class MultiLayerPerceptronService {
 	}
 
 	/**
-	 * Saves all the runners for which the data set used matches the parameter.
+	 * Saves all the runners for which the data set used matches the parameter. Note that all data that is in memory will 
+	 * overwrite what is on disk
 	 *
 	 * @param dataSetInfo {@link DataSetInfo}
 	 * @throws IOException - 
 	 */
 	public void saveRunners(DataSetInfo dataSetInfo) throws IOException {
-		FileOutputStream fout = new FileOutputStream(config.getDatasetFilePath() + "/" + dataSetInfo.name() + "-perceptrons.ser");
-		ObjectOutputStream oos = new ObjectOutputStream(fout);
+		FileOutputStream fout = new FileOutputStream(config.getDatasetFilePath() + "/" + dataSetInfo.name() + "-perceptrons.ser.gz");
+		GZIPOutputStream gz = new GZIPOutputStream(fout);
+		ObjectOutputStream oos = new ObjectOutputStream(gz);
 
 		//create new array to contain all the runners to be saved
 		HashMap<String, MultiLayerPerceptronRunner> dataSetRunners = new HashMap<>();
@@ -287,44 +291,36 @@ public class MultiLayerPerceptronService {
 		}
 
 		oos.writeObject(dataSetRunners);
+		gz.close();
+		oos.close();
 	}
 
 	public void retrieveRunners() throws IOException, ClassNotFoundException {
+		
 		//Read all the saved perceptron runners from disk
-		FileInputStream fis = new FileInputStream(config.getDatasetFilePath() + "/perceptrons.ser");
-		BufferedInputStream bis = new BufferedInputStream(fis);
-		ObjectInputStream ois = new ObjectInputStream(bis);
-		Object obj = ois.readObject();
-		ois.close();
-
-		//Re-instantiate the data sets - this was not serialized
-		HashMap<String, MultiLayerPerceptronRunner> runners = (HashMap<String, MultiLayerPerceptronRunner>) obj;
-		Set<String> ids = runners.keySet();
-		String[] idss = ids.toArray(new String[ids.size()]);
-		List<String> mlpIds = Arrays.asList(idss);
-		Collections.sort(mlpIds);
-		for (String mlpId : mlpIds) {
-			MultiLayerPerceptronRunner runner = runners.get(mlpId);
-			DataSet dataSet = runner.initializeDataSet(runner.getForm());
-			runner.getPerceptron().getLearningRule().stopLearning();// we need to explicitly set this to stopped when deserializing a runner 
-			runner.getPerceptron().getLearningRule().setTrainingSet(dataSet);
-			this.multiLayerPerceptronRunners.put(mlpId, runner);
+		for (DataSetInfo info : DataSetInfo.values()){
+			retrieveRunners(info);
 		}
 
 	}
 
 	public void retrieveRunners(DataSetInfo dataSetInfo) throws IOException, ClassNotFoundException {
 		//Read all the saved perceptron runners from disk
-		FileInputStream fis = new FileInputStream(config.getDatasetFilePath() + "/" + dataSetInfo.name() + "-perceptrons.ser");
+		FileInputStream fis = new FileInputStream(config.getDatasetFilePath() + "/" + dataSetInfo.name() + "-perceptrons.ser.gz");
 		BufferedInputStream bis = new BufferedInputStream(fis);
-		ObjectInputStream ois = new ObjectInputStream(bis);
+		GZIPInputStream gis = new GZIPInputStream(bis);
+		ObjectInputStream ois = new ObjectInputStream(gis);
 		Object obj = ois.readObject();
 		ois.close();
-
+		gis.close();
+		
 		//Re-instantiate the data sets - this was not serialized
 		HashMap<String, MultiLayerPerceptronRunner> runners = (HashMap<String, MultiLayerPerceptronRunner>) obj;
 		for (Map.Entry<String, MultiLayerPerceptronRunner> entry : runners.entrySet()) {
 			MultiLayerPerceptronRunner runner = entry.getValue();
+			
+			//refresh the config - when the application starts the config is initialized, so we must refresh the stale config from the repo
+			runner.setConfig(config); 
 			DataSet dataSet = runner.initializeDataSet(runner.getForm());
 			runner.getPerceptron().getLearningRule().stopLearning();// we need to explicitly set this to stopped when deserializing a runner 
 			runner.getPerceptron().getLearningRule().setTrainingSet(dataSet);
